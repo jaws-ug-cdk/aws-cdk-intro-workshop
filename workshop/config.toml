@@ -40,13 +40,13 @@ weight = 3
 [[menu.shortcuts]]
 name = "<i class='fab fa-github fa-lg'></i> workshop (issues/PRs)"
 identifier = "fb"
-url = "https://github.com/aws-samples/aws-cdk-intro-workshop"
+url = "https://github.com/jaws-ug-cdk/aws-cdk-intro-workshop"
 weight = 4
 
 [[menu.shortcuts]]
-name = "<i class='fab fa-twitter fa-lg'></i> @emeshbi"
+name = "<i class='fab fa-twitter fa-lg'></i> @jawsug_cdk"
 identifier = "mm"
-url = "https://twitter.com/intent/user?screen_name=emeshbi"
+url = "https://twitter.com/intent/user?screen_name=jawsug_cdk"
 weight = 5
 
 [outputs]
