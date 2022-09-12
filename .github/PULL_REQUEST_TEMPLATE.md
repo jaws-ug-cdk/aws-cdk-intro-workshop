@@ -4,7 +4,7 @@ Explain what changed and why.
 Please read the [Contribution guidelines][1] and follow the pull-request
 checklist.
 
-[1]: https://github.com/aws-samples/aws-cdk-intro-workshop/blob/master/CONTRIBUTING.md
+[1]: https://github.com/jaws-ug-cdk/aws-cdk-intro-workshop/blob/master/CONTRIBUTING.md
 -->
 
 Fixes # <!-- Please create a new issue if none exists yet -->
