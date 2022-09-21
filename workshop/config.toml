@@ -1,4 +1,4 @@
-baseURL = "https://cdkworkshop.com"
+baseURL = "https://jaws-ug-cdk.github.io/aws-cdk-intro-workshop"
 languageCode = "en-us"
 defaultContentLanguage = "en"
 title = "AWS Cloud Development Kit (AWS CDK) Workshop"
