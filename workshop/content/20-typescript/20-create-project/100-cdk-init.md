@@ -3,9 +3,9 @@ title = "cdk init"
 weight = 100
 +++
 
-## Create project directory
+## プロジェクトディレクトリを作成する
 
-Create an empty directory on your system:
+空のディレクトリを作成します。
 
 ```
 mkdir cdk-workshop && cd cdk-workshop
@@ -13,15 +13,13 @@ mkdir cdk-workshop && cd cdk-workshop
 
 ## cdk init
 
-We will use `cdk init` to create a new TypeScript CDK project:
+`cdk init`コマンドを実行して、TypeScript製の新しいCDKプロジェクトを作成します。
 
 ```
 cdk init sample-app --language typescript
 ```
 
-Output should look like this (you can safely ignore warnings about
-initialization of a git repository, this probably means you don't have git
-installed, which is fine for this workshop):
+出力は次のようになります（gitリポジトリの初期化に関する警告は無視してください。これはGitがインストールされていないことを意味します。）
 
 ```
 Applying project template app for typescript
@@ -48,7 +46,19 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
  * `cdk synth`       emits the synthesized CloudFormation template
 ```
 
-As you can see, it shows us a bunch of useful commands to get us started.
+上記出力の最後に載っているのはcdkコマンドの例です。
+ご覧のとおり、CDKを開始するための便利なコマンドがたくさんあります。
+
+```
+## Useful commands
+
+ * `npm run build`   compile typescript to js
+ * `npm run watch`   watch for changes and compile
+ * `npm run test`    perform the jest unit tests
+ * `cdk deploy`      deploy this stack to your default AWS account/region
+ * `cdk diff`        compare deployed stack with current state
+ * `cdk synth`       emits the synthesized CloudFormation template
+```
 
 ## See Also
 
