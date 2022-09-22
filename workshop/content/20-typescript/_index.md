@@ -6,13 +6,13 @@ weight = 20
 
 # The TypeScript Workshop
 
-This version of the workshop will guide you through a getting started experience in TypeScript.
+本項では、TypeScriptの入門編を体験できます。
 
 {{% notice info %}}
 
-**A disclaimer about cost**: Some of the steps in this workshop will create resources that
-may bill your account. If you do not complete the workshop, you may still have AWS resources 
-that are unknowingly charging your account. To ensure your account is clean after starting
-this workshop, check out the [cleanup section]({{< ref "/20-typescript/60-cleanups" >}}) at the end of the TypeScript Workshop.
+**AWS利用料についての免責事項**: このワークショップのいくつかのステップでは、請求が発生する可能性のあるリソースをあなたのアカウントに作成します。
+このワークショップを最後まで実施しなくても、アカウントに課金が発生するAWSリソースが作られているかもしれません。
+あなたのアカウントがクリーンであることを確認するには、TypeScriptワークショップの最後にある
+[cleanup section]({{< ref "/20-typescript/60-cleanups" >}})のセクションを確認してください。
 
 {{% /notice %}}
