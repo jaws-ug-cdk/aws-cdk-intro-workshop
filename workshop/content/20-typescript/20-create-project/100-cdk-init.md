@@ -19,7 +19,7 @@ mkdir cdk-workshop && cd cdk-workshop
 cdk init sample-app --language typescript
 ```
 
-出力は次のようになります（gitリポジトリの初期化に関する警告は無視してください。これはGitがインストールされていないことを意味します。）
+出力は次のようになります。
 
 ```
 # Welcome to your CDK TypeScript project
@@ -62,19 +62,7 @@ npm notice
 ****************************************************
 ```
 
-上記出力の最後に載っているのはcdkコマンドの例です。
-ご覧のとおり、CDKを開始するための便利なコマンドがたくさんあります。
-
-```
-## Useful commands
-
- * `npm run build`   compile typescript to js
- * `npm run watch`   watch for changes and compile
- * `npm run test`    perform the jest unit tests
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk synth`       emits the synthesized CloudFormation template
-```
+上記出力にあるとおり、CDKを開始するための便利なコマンドがたくさんあります。
 
 ## See Also
 
