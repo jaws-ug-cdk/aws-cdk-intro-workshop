@@ -3,37 +3,36 @@ title = "Project structure"
 weight = 300
 +++
 
-## Open your IDE
+## IDEを開く
 
-Now's a good time to open the project in your favorite IDE and explore.
+使い慣れたIDEでプロジェクトを開いてみましょう。
 
-> If you use VSCode, you can just type `code .` within the project directory.
+> Cloud9 を使用する場合は、すでにIDEの画面で操作を行っています。
 
-## Explore your project directory
+> VSCodeを使用する場合は、 `code .` コマンドをプロジェクトディレクトリ内で実行すれば簡単に開けます。
 
-You'll see something like this:
+## プロジェクトディレクトリを確認する
+
+以下のようなディレクトリ構成が確認できます。
 
 ![](./structure.png)
 
-* __`lib/cdk-workshop-stack.ts`__ is where your CDK application's main stack is defined.
-  This is the file we'll be spending most of our time in.
-* `bin/cdk-workshop.ts` is the entrypoint of the CDK application. It will load
-  the stack defined in `lib/cdk-workshop-stack.ts`.
-* `package.json` is your npm module manifest. It includes information like the
-  name of your app, version, dependencies and build scripts like "watch" and
-  "build" (`package-lock.json` is maintained by npm)
-* `cdk.json` tells the toolkit how to run your app. In our case it will be
-  `"npx ts-node bin/cdk-workshop.ts"`
-* `tsconfig.json` your project's [typescript
-  configuration](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html)
-* `.gitignore` and `.npmignore` tell git and npm which files to include/exclude
-  from source control and when publishing this module to the package manager.
-* `node_modules` is maintained by npm and includes all your project's
-  dependencies.
+- **`lib/cdk-workshop-stack.ts`** CDKアプリケーションのメインスタックが定義されます。
+  今回のワークショップではこのファイルを主に修正します。
+- `bin/cdk-workshop.ts` CDKアプリケーションのエントリポイントです。
+  `lib/cdk-workshop-stack.ts` で定義されたスタックをロードします。
+- `package.json` npmモジュールのマニフェストです。
+  アプリの名前、バージョン、依存関係、"watch" や "build" 用のビルドスクリプトなどの情報が含まれます（`package-lock.json` はnpmによって管理されます）
+- `cdk.json` アプリの実行方法をツールキットに指示させるためのファイルです。
+  今回の場合は、 `"npx ts-node bin/cdk-workshop.ts"` です。
+- `tsconfig.json` プロジェクトの [TypeScript設定](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html) です。
+- `.gitignore`, `.npmignore` Gitとnpm用のファイルです。
+  ソースコードの管理に含める/除外するファイルと、パッケージマネージャーへの公開用設定が含まれています。
+- `node_modules` npmによって管理され、プロジェクトのすべての依存関係が含まれます。
 
-## Your app's entry point
+## アプリのエントリポイント
 
-Let's have a quick look at `bin/cdk-workshop.ts`:
+`bin/cdk-workshop.ts`を簡単に見てみましょう。
 
 ```js
 #!/usr/bin/env node
@@ -44,26 +43,26 @@ const app = new cdk.App();
 new CdkWorkshopStack(app, 'CdkWorkshopStack');
 ```
 
-This code loads and instantiates the `CdkWorkshopStack` class from the
-`lib/cdk-workshop-stack.ts` file. We won't need to look at this file anymore.
+このコードは、`lib/cdk-workshop-stack.ts`ファイルを開き、 `CdkWorkshopStack` クラス をロードして初期化するものです。
+一度読んだら、もうこのファイルを見る必要はありません。
 
-## The main stack
+## メインスタック
 
-Open up `lib/cdk-workshop-stack.ts`. This is where the meat of our application
-is:
+`lib/cdk-workshop-stack.ts`を開いてみましょう。これがアプリケーションの要です。
 
 ```ts
-import * as cdk from 'aws-cdk-lib';
+import { Duration, Stack, StackProps } from 'aws-cdk-lib';
 import * as sns from 'aws-cdk-lib/aws-sns';
 import * as subs from 'aws-cdk-lib/aws-sns-subscriptions';
 import * as sqs from 'aws-cdk-lib/aws-sqs';
+import { Construct } from 'constructs';
 
-export class CdkWorkshopStack extends cdk.Stack {
-  constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
+export class CdkWorkshopStack extends Stack {
+  constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
     const queue = new sqs.Queue(this, 'CdkWorkshopQueue', {
-      visibilityTimeout: cdk.Duration.seconds(300)
+      visibilityTimeout: Duration.seconds(300)
     });
 
     const topic = new sns.Topic(this, 'CdkWorkshopTopic');
@@ -73,11 +72,10 @@ export class CdkWorkshopStack extends cdk.Stack {
 }
 ```
 
-As you can see, our app was created with a sample CDK stack
-(`CdkWorkshopStack`).
+ご覧のとおり、アプリはサンプルCDKスタック(`CdkWorkshopStack`)です.
 
-The stack includes:
+このスタックは次のものを含みます。
 
-- SQS Queue (`new sqs.Queue`)
-- SNS Topic (`new sns.Topic`)
-- Subscribes the queue to receive any messages published to the topic (`topic.addSubscription`)
+- SQS キュー (`new sqs.Queue`)
+- SNS トピック (`new sns.Topic`)
+- キューをサブスクライブして、トピックに発行されたメッセージを受信します (`topic.addSubscription`)
