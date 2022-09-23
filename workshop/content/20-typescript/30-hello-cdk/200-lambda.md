@@ -59,10 +59,10 @@ export class CdkWorkshopStack extends Stack {
 
     // defines an AWS Lambda resource
     const hello = new lambda.Function(this, 'HelloHandler', {
-      runtime: lambda.Runtime.NODEJS_16_X,   // execution environment
-      code: lambda.Code.fromAsset('lambda'), // code loaded from "lambda" directory
-      handler: 'hello.handler',              // file is "hello", function is "handler"
-    })
+      runtime: lambda.Runtime.NODEJS_16_X,    // execution environment
+      code: lambda.Code.fromAsset('lambda'),  // code loaded from "lambda" directory
+      handler: 'hello.handler',               // file is "hello", function is "handler"
+    });
   }
 }
 {{</highlight>}}
@@ -144,11 +144,6 @@ NOTICES
 
 If you don’t want to see a notice anymore, use "cdk acknowledge <id>". For example, "cdk acknowledge 21902".
 ```
-
-As you can see, this code synthesizes an __AWS::Lambda::Function__ resource. It
-also synthesized a couple of [CloudFormation
-parameters](https://docs.aws.amazon.com/cdk/latest/guide/get_cfn_param.html)
-that are used by the toolkit to propagate the location of the handler code.
 
 上記のとおり、このコードから **AWS::Lambda::Function** リソース用のCloudFormationテンプレートを生成しました。
 また、ツールキットがハンドラーコードの場所を伝達するためにいくつかの[CloudFormationパラメーター](https://docs.aws.amazon.com/cdk/latest/guide/get_cfn_param.html)を利用しています。

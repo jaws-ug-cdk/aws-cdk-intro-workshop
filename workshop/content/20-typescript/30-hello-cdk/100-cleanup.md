@@ -26,9 +26,6 @@ export class CdkWorkshopStack extends Stack {
 
 ## cdk diff
 
-Now that we modified our stack's contents, we can ask the toolkit to show us the difference between our CDK app and
-what's currently deployed. This is a safe way to check what will happen once we run `cdk deploy` and is always good practice:
-
 これでスタックの中身を修正したことになります。
 `cdk diff`を実行することで、スタックの修正によってどのような変更が発生するのかをツールキットで確認できます。
 これは `cdk deploy` を実行したときに何が起こるかを確認する安全な方法であり、いつでも使える良いプラクティスです。
@@ -42,13 +39,13 @@ cdk diff
 ```
 Stack CdkWorkshopStack
 IAM Statement Changes
-┌───┬─────────────────────────────────┬────────┬─────────────────┬───────────────────────────┬─────────────────────────────────────────────────────────────────┐
-│   │ Resource                        │ Effect │ Action          │ Principal                 │ Condition                                                       │
-├───┼─────────────────────────────────┼────────┼─────────────────┼───────────────────────────┼─────────────────────────────────────────────────────────────────┤
-│ - │ ${CdkWorkshopQueue50D9D426.Arn} │ Allow  │ sqs:SendMessage │ Service:sns.amazonaws.com │ "ArnEquals": {                                                  │
-│   │                                 │        │                 │                           │   "aws:SourceArn": "${CdkWorkshopTopicD368A42F}"                │
-│   │                                 │        │                 │                           │ }                                                               │
-└───┴─────────────────────────────────┴────────┴─────────────────┴───────────────────────────┴─────────────────────────────────────────────────────────────────┘
+┌───┬─────────────────────────────────┬────────┬─────────────────┬───────────────────────────┬──────────────────────────────────────────────────┐
+│   │ Resource                        │ Effect │ Action          │ Principal                 │ Condition                                        │
+├───┼─────────────────────────────────┼────────┼─────────────────┼───────────────────────────┼──────────────────────────────────────────────────┤
+│ - │ ${CdkWorkshopQueue50D9D426.Arn} │ Allow  │ sqs:SendMessage │ Service:sns.amazonaws.com │ "ArnEquals": {                                   │
+│   │                                 │        │                 │                           │   "aws:SourceArn": "${CdkWorkshopTopicD368A42F}" │
+│   │                                 │        │                 │                           │ }                                                │
+└───┴─────────────────────────────────┴────────┴─────────────────┴───────────────────────────┴──────────────────────────────────────────────────┘
 (NOTE: There may be security-related changes not in this list. See https://github.com/aws/aws-cdk/issues/1299)
 
 Resources
@@ -76,8 +73,6 @@ If you don’t want to see a notice anymore, use "cdk acknowledge <id>". For exa
 想定の通り、既存のリソースがすっかり削除されることになります。
 
 ## cdk deploy
-
-Run `cdk deploy` and __proceed to the next section__ (no need to wait):
 
 `cdk deploy`を実行したら、**次のセクションに進みます。**（デプロイの完了を見届けなくても良いです）
 
