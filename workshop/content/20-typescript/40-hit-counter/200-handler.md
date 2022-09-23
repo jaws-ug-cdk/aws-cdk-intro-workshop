@@ -3,11 +3,11 @@ title = "Hit counter handler"
 weight = 100
 +++
 
-## Hit counter Lambda handler
+## HitCounter Lambda ハンドラー
 
-Okay, now let's write the Lambda handler code for our hit counter.
+HitCounterのLambdaハンドラーコードを記述しましょう。
 
-Create the file `lambda/hitcounter.js`:
+`lambda/hitcounter.js`を作成し、次のコードを追記してください。
 
 ```js
 const { DynamoDB, Lambda } = require('aws-sdk');
@@ -40,14 +40,15 @@ exports.handler = async function(event) {
 };
 ```
 
-## Discovering resources at runtime
+## 実行時のリソース検出
 
-You'll notice that this code relies on two environment variables:
+このコードは、次の2つの環境変数を参照していることがわかります。
 
- * `HITS_TABLE_NAME` is the name of the DynamoDB table to use for storage.
- * `DOWNSTREAM_FUNCTION_NAME` is the name of the downstream AWS Lambda function.
+ * `HITS_TABLE_NAME` データストアとして使用するDynamoDBのテーブル名
+ * `DOWNSTREAM_FUNCTION_NAME` ダウンストリームLambda関数
 
-Since the actual name of the table and the downstream function will only be
-decided when we deploy our app, we need to wire up these values from our
-construct code. We'll do that in the next section.
+テーブルとダウンストリーム関数の名前はアプリをデプロイするときに決まるため、これらの値をコンストラクトコードから関連付ける必要があります。
+次のセクションでそれを行います。
 
+Lambda関数がさらに別のLambda関数を呼び出すようになっています。
+呼び出される側のLambda関数をダウンストリームLambda関数、あるいは単にダウンストリーム関数とここでは呼んでいます。
