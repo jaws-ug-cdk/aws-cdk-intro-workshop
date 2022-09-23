@@ -11,6 +11,6 @@ weight = 30
 
 エンドポイントの任意のパスにアクセスするとレスポンスを受け取ることができるようになります。
 
-![](/images/hello-arch.png)
+![](/aws-cdk-intro-workshop/images/hello-arch.png)
 
 はじめに、サンプルコードをクリーンアップしましょう。
