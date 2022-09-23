@@ -43,9 +43,6 @@ IDEがオートコンプリート、インラインドキュメント、およ�
 
 ## AWS Lambda関数をスタックに追加する
 
-Add an `import` statement at the beginning of `lib/cdk-workshop-stack.ts`, and a
-`lambda.Function` to your stack.
-
 `import`ステートメントを`lib/cdk-workshop-stack.ts`の冒頭に挿入し、`lambda.Function`をスタックに追加します。
 
 {{<highlight ts "hl_lines=3 9-14">}}
