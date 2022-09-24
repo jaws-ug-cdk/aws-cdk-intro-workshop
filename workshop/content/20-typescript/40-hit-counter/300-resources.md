@@ -5,7 +5,7 @@ weight = 300
 
 ## HitCounterコンストラクトにリソースを追加する
 
-次に、AWS Lambda関数とDynamoDBテーブルをHitCounter コンストラクトに定義します。
+次に、AWS Lambda関数とDynamoDBテーブルを`HitCounter`コンストラクトに定義します。
 
 `lib/hitcounter.ts` に戻って、以下のコードを追記しましょう。
 
