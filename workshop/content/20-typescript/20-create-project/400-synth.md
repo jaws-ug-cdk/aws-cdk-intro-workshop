@@ -3,25 +3,24 @@ title = "cdk synth"
 weight = 400
 +++
 
-## Synthesize a template from your app
+## アプリからテンプレートを生成する
 
-AWS CDK apps are effectively only a __definition__ of your infrastructure using
-code. When CDK apps are executed, they produce (or "__synthesize__", in CDK
-parlance) an AWS CloudFormation template for each stack defined in your
-application.
+AWS CDKアプリ自体はコードを使用したインフラストラクチャの **定義** にすぎません。
+CDKアプリが実行されると、アプリケーションで定義された各スタックのAWS CloudFormationテンプレートが生成（CDKの用語では `"synthesize"` ）されます。
 
-To synthesize a CDK app, use the `cdk synth` command. Let's check out the
-template synthesized from the sample app:
+CDKアプリを生成するには、 `cdk synth` コマンドを実行してください。
+サンプルアプリから生成されたCloudFormationテンプレートを確認してみましょう。
 
-{{% notice info %}} The **CDK CLI** requires you to be in the same directory 
-as your `cdk.json` file. If you have changed directories in your terminal, 
-please navigate back now.{{% /notice %}}
+{{% notice info %}}
+**CDK CLI** は`cdk.json`ファイルが配置されているプロジェクトのルートディレクトリで実行する必要があります。
+ディレクトリを移動している場合はプロジェクトのルートディレクトリに戻ってからCDKコマンドを実行してください。
+{{% /notice %}}
 
 ```
 cdk synth
 ```
 
-Will output the following CloudFormation template:
+上記コマンドを実行すると、次のCloudFormationテンプレートを出力します。
 
 ```yaml
 Resources:
@@ -29,6 +28,8 @@ Resources:
     Type: AWS::SQS::Queue
     Properties:
       VisibilityTimeout: 300
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
     Metadata:
       aws:cdk:path: CdkWorkshopStack/CdkWorkshopQueue/Resource
   CdkWorkshopQueuePolicyAF2494A5:
@@ -72,12 +73,17 @@ Resources:
   CDKMetadata:
     Type: AWS::CDK::Metadata
     Properties:
-      Modules: aws-cdk=1.21.1,@aws-cdk/aws-cloudwatch=1.21.1,@aws-cdk/aws-iam=1.21.1,@aws-cdk/aws-kms=1.21.1,@aws-cdk/aws-sns=1.21.1,@aws-cdk/aws-sns-subscriptions=1.21.1,@aws-cdk/aws-sqs=1.21.1,@aws-cdk/core=1.21.1,@aws-cdk/cx-api=1.21.1,@aws-cdk/region-info=1.21.1,jsii-runtime=node.js/v13.6.0
+      Analytics: v2:deflate64:H4sIAAAAAAAA/1WNQQrCMBBFz9J9OhoFxXUvoK17aZMI09akZhJFQu5uk4DgZv7/jwezg/0JeNW/qRZyqmccIHSuFxNb0S3QkyBcvPKKNXddSr5nM6P4/GCZkZFe/c4PJCwuDo1Oxt++mgVFornEmGqryHgr8o/GaInJjEwbqWCkzYsfgB9hW42EWFuvHT4UtCW/VHqIZsEAAAA=
+    Metadata:
+      aws:cdk:path: CdkWorkshopStack/CDKMetadata/Default
     Condition: CDKMetadataAvailable
 Conditions:
   CDKMetadataAvailable:
     Fn::Or:
       - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - af-south-1
           - Fn::Equals:
               - Ref: AWS::Region
               - ap-east-1
@@ -105,13 +111,16 @@ Conditions:
           - Fn::Equals:
               - Ref: AWS::Region
               - cn-northwest-1
-          - Fn::Equals:
-              - Ref: AWS::Region
-              - eu-central-1
       - Fn::Or:
           - Fn::Equals:
               - Ref: AWS::Region
+              - eu-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
               - eu-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-south-1
           - Fn::Equals:
               - Ref: AWS::Region
               - eu-west-1
@@ -133,24 +142,43 @@ Conditions:
           - Fn::Equals:
               - Ref: AWS::Region
               - us-east-2
+      - Fn::Or:
           - Fn::Equals:
               - Ref: AWS::Region
               - us-west-1
           - Fn::Equals:
               - Ref: AWS::Region
               - us-west-2
+Parameters:
+  BootstrapVersion:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cdk-bootstrap/hnb659fds/version
+    Description: Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]
+Rules:
+  CheckBootstrapVersion:
+    Assertions:
+      - Assert:
+          Fn::Not:
+            - Fn::Contains:
+                - - "1"
+                  - "2"
+                  - "3"
+                  - "4"
+                  - "5"
+                - Ref: BootstrapVersion
+        AssertDescription: CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.
 ```
 
-As you can see, this template includes four resources:
+ご覧のとおり、このテンプレートには4つのリソースが含まれています。
 
-- **AWS::SQS::Queue** - our queue
-- **AWS::SNS::Topic** - our topic
-- **AWS::SNS::Subscription** - the subscription between the queue and the topic
-- **AWS::SQS::QueuePolicy** - the IAM policy which allows this topic to send messages to the queue
+- **AWS::SQS::Queue** - キュー
+- **AWS::SNS::Topic** - トピック
+- **AWS::SNS::Subscription** - キューとトピックの間のサブスクリプション
+- **AWS::SQS::QueuePolicy** - このトピックがメッセージをキューに送信できるようにするリソースポリシー
 
-{{% notice info %}} The **AWS::CDK::Metadata** resource is automatically added
-by the toolkit to every stack. It is used by the AWS CDK team for analytics and
-to allow us to identify versions with security issues. See [Version Reporting](https://docs.aws.amazon.com/cdk/latest/guide/tools.html) in
-the AWS CDK User Guide for more details. We will omit the metadata resource in
-diff views for the rest of this workshop {{% /notice %}}
-
+{{% notice info %}} 
+**AWS::CDK::Metadata** リソースは、ツールキットによって自動的に各スタックに追加されます。
+AWS CDKチームはこれを分析のために使用し、セキュリティ上の問題があるバージョンを特定できるようにします。
+詳細については、AW​​S CDKユーザーガイドの[Version Reporting](https://docs.aws.amazon.com/cdk/latest/guide/tools.html)を参照してください。
+このワークショップの残りの説明では、メタデータリソースに関する詳細は省略します。
+{{% /notice %}}

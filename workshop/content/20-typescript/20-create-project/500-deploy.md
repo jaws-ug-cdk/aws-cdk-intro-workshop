@@ -3,99 +3,95 @@ title = "cdk deploy"
 weight = 500
 +++
 
-Okay, we've got a CloudFormation template. What's next? __Let's deploy it into our account!__
+CloudFormationテンプレートが作成されました。次は何を行うでしょうか？ **AWSへのデプロイをしましょう！**
 
-## Bootstrapping an environment
+## 環境の初期構築
 
-The first time you deploy an AWS CDK app into an environment (account/region),
-you can install a "bootstrap stack". This stack includes resources that
-are used in the toolkit's operation. For example, the stack includes an S3
-bucket that is used to store templates and assets during the deployment process.
+AWS CDKアプリを環境（アカウント/リージョン）に初めてデプロイするときは、Bootstrapスタックを構築する必要があります。
+このスタックには、ツールキットの操作に必要なリソースが含まれています。
+たとえば、スタックにはデプロイプロセスで使われるCloudformationテンプレートとアセットを保存するために使用されるS3バケットが含まれます。
 
-You can use the `cdk bootstrap` command to install the bootstrap stack into an
-environment:
+`cdk bootstrap` コマンドを実行すれば、bootstrapスタックがAWS環境にデプロイされます。
 
 ```
 cdk bootstrap
 ```
 
-Then:
+実行すると以下のように表示されます。
 
 ```
  ⏳  Bootstrapping environment aws://999999999999/us-east-1...
 ...
 ```
 
-{{% notice info %}} You might see an Access Denied error at this step,
-if the **AWS CLI** has not been [set up correctly](/15-prerequisites/200-account.html) or if the active
-[AWS profile](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html)
-does not have the `cloudformation:CreateChangeSet` permission. {{% /notice %}}
+{{% notice info %}} 
+アクセス拒否エラーとなるときは**AWS CLI**のクレデンシャル情報が[正しく設定](/15-prerequisites/200-account.html)されているか、
+[現在のプロファイル](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html)が
+CloudFormationの`cloudformation:CreateChangeSet`を実行する権限を持っているか確認してください。
+{{% /notice %}}
 
-## Let's deploy
+## デプロイしましょう！
 
-Use `cdk deploy` to deploy a CDK app:
+`cdk deploy` コマンドを使用することで、CDKアプリをデプロイできます。
 
 ```
 cdk deploy
 ```
 
-You should see a warning like the following:
+次のような警告が表示されるはずです。
 
 ```text
 This deployment will make potentially sensitive changes according to your current security approval level (--require-approval broadening).
 Please confirm you intend to make the following modifications:
 
 IAM Statement Changes
-┌───┬────────────────────────────────┬────────┬─────────────────┬────────────────────────────────┬────────────────────────────────┐
-│   │ Resource                       │ Effect │ Action          │ Principal                      │ Condition                      │
-├───┼────────────────────────────────┼────────┼─────────────────┼────────────────────────────────┼────────────────────────────────┤
-│ + │ ${CdkWorkshopQueue.Arn}        │ Allow  │ sqs:SendMessage │ Service:sns.amazonaws.com      │ "ArnEquals": {                 │
-│   │                                │        │                 │                                │   "aws:SourceArn": "${CdkWorks │
-│   │                                │        │                 │                                │ hopTopic}"                     │
-│   │                                │        │                 │                                │ }                              │
-└───┴────────────────────────────────┴────────┴─────────────────┴────────────────────────────────┴────────────────────────────────┘
+┌───┬─────────────────────────┬────────┬─────────────────┬───────────────────────────┬─────────────────────────────────────────────────────────┐
+│   │ Resource                │ Effect │ Action          │ Principal                 │ Condition                                               │
+├───┼─────────────────────────┼────────┼─────────────────┼───────────────────────────┼─────────────────────────────────────────────────────────┤
+│ + │ ${CdkWorkshopQueue.Arn} │ Allow  │ sqs:SendMessage │ Service:sns.amazonaws.com │ "ArnEquals": {                                          │
+│   │                         │        │                 │                           │   "aws:SourceArn": "${CdkWorkshopTopic}"                │
+│   │                         │        │                 │                           │ }                                                       │
+└───┴─────────────────────────┴────────┴─────────────────┴───────────────────────────┴─────────────────────────────────────────────────────────┘
 (NOTE: There may be security-related changes not in this list. See https://github.com/aws/aws-cdk/issues/1299)
 
-Do you wish to deploy these changes (y/n)?
+Do you wish to deploy these changes (y/n)? 
 ```
 
-This is warning you that deploying the app contains security-sensitive changes.
-Since we need to allow the topic to send messages to the queue,
-enter **y** to deploy the stack and create the resources.
+これは、アプリのデプロイにはリスクが伴うことを警告しています。
+トピックがメッセージをキューに送信できるようにする必要があるため、**y**を入力してスタックをデプロイし、リソースを作成します。
 
-Output should look like the following, where ACCOUNT-ID is your account ID, REGION is the region in which you created the app,
-and STACK-ID is the unique identifier for your stack:
+出力は次のようになります。
+ACCOUNT-IDはアカウントID、REGIONはアプリを作成したリージョン、STACK-IDはスタックを一意に特定する識別子です。
 
 ```
 CdkWorkshopStack: deploying...
 CdkWorkshopStack: creating CloudFormation changeset...
 
-
-
  ✅  CdkWorkshopStack
+
+✨  Deployment time: 93.21s
 
 Stack ARN:
 arn:aws:cloudformation:REGION:ACCOUNT-ID:stack/CdkWorkshopStack/STACK-ID
+
+✨  Total time: 107.65s
 ```
 
-## The CloudFormation Console
+## CloudFormationコンソール
 
-CDK apps are deployed through AWS CloudFormation. Each CDK stack maps 1:1 with
-CloudFormation stack.
+CDKアプリはAWS CloudFormationを介してデプロイされます。
+各CDKスタックはCloudFormationスタックと1：1に対応します。
 
-This means that you can use the AWS CloudFormation console in order to manage
-your stacks.
+なので、AWS CloudFormationコンソールでスタックを管理することができます。
 
-Let's take a look at the [AWS CloudFormation
-console](https://console.aws.amazon.com/cloudformation/home).
+[AWS CloudFormationコンソール](https://console.aws.amazon.com/cloudformation/home)を見てみましょう。
 
-You will likely see something like this (if you don't, make sure you are in the correct region):
+次のようなものが表示されるはずです。（表示されない場合、正しいリージョンにいるか確認してください。）
 
 ![](./cfn1.png)
 
-If you select `CdkWorkshopStack` and open the __Resources__ tab, you will see the
-physical identities of our resources:
+`CdkWorkshopStack` を選択し、**リソース**タブを開けば、リソースの物理IDを確認できます。
 
 ![](./cfn2.png)
 
-# I am ready for some actual coding!
+# これでコーディングの準備が整いました！
