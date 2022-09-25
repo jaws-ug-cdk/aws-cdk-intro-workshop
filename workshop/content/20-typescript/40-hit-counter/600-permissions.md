@@ -3,11 +3,11 @@ title = "Granting permissions"
 weight = 600
 +++
 
-## Allow Lambda to read/write our DynamoDB table
+## LambdaがDynamoDBテーブルを読み書きできるようにする
 
-Let's give our Lambda's execution role permissions to read/write from our table.
+Lambdaの実行ロールに、DynamoDBテーブルの読み取り/書き込み権限を与えましょう。
 
-Go back to `hitcounter.ts` and add the following highlighted lines:
+`hitcounter.ts`に戻り、次の強調表示された行を追加します。
 
 {{<highlight ts "hl_lines=33-34">}}
 import * as cdk from 'aws-cdk-lib';
@@ -48,24 +48,23 @@ export class HitCounter extends Construct {
 }
 {{</highlight>}}
 
-## Deploy
+## デプロイ
 
-Save & deploy:
+保存してデプロイしてみましょう。
 
 ```
 cdk deploy
 ```
 
-## Test again
+## 再テスト
 
-Okay, deployment is complete. Let's run our test again (either use `curl` or
-your web browser):
+さて、デプロイが完了しました。テストをもう一度実行してみましょう（`curl`コマンドかWebブラウザのいずれかを使用してください）
 
 ```
 curl -i https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod/
 ```
 
-Again?
+またもやエラーが発生しました。
 
 ```
 HTTP/2 502 Bad Gateway
@@ -74,46 +73,53 @@ HTTP/2 502 Bad Gateway
 {"message": "Internal server error"}
 ```
 
-# 😢
+# 再調査
 
-Still getting this pesky 5xx error! Let's look at our CloudWatch logs again
-(click "Refresh"):
+まだこの厄介な5xxエラーが発生しています。CloudWatchログをもう一度見てみましょう（「更新」をクリックします）。
 
 ```json
 {
-    "errorMessage": "User: arn:aws:sts::585695036304:assumed-role/CdkWorkshopStack-HelloHitCounterHitCounterHandlerS-TU5M09L1UBID/CdkWorkshopStack-HelloHitCounterHitCounterHandlerD-144HVUNEWRWEO is not authorized to perform: lambda:InvokeFunction on resource: arn:aws:lambda:us-east-1:585695036304:function:CdkWorkshopStack-HelloHandler2E4FBA4D-149MVAO4969O7",
     "errorType": "AccessDeniedException",
-    "stackTrace": [
-        "Object.extractError (/var/runtime/node_modules/aws-sdk/lib/protocol/json.js:48:27)",
-        "Request.extractError (/var/runtime/node_modules/aws-sdk/lib/protocol/rest_json.js:52:8)",
-        "Request.callListeners (/var/runtime/node_modules/aws-sdk/lib/sequential_executor.js:105:20)",
-        "Request.emit (/var/runtime/node_modules/aws-sdk/lib/sequential_executor.js:77:10)",
-        "Request.emit (/var/runtime/node_modules/aws-sdk/lib/request.js:683:14)",
-        "Request.transition (/var/runtime/node_modules/aws-sdk/lib/request.js:22:10)",
-        "AcceptorStateMachine.runTo (/var/runtime/node_modules/aws-sdk/lib/state_machine.js:14:12)",
-        "/var/runtime/node_modules/aws-sdk/lib/state_machine.js:26:10",
-        "Request.<anonymous> (/var/runtime/node_modules/aws-sdk/lib/request.js:38:9)",
-        "Request.<anonymous> (/var/runtime/node_modules/aws-sdk/lib/request.js:685:12)"
+    "errorMessage": "User: arn:aws:sts::123456789012:assumed-role/CdkWorkshopStack-HelloHitCounterHitCounterHandlerS-1234567890123/CdkWorkshopStack-HelloHitCounterHitCounterHandlerD-123456789012 is not authorized to perform: lambda:InvokeFunction on resource: arn:aws:lambda:ap-northeast-1:123456789012:function:CdkWorkshopStack-HelloHandler2E4FBA4D-123456789012 because no identity-based policy allows the lambda:InvokeFunction action",
+    "code": "AccessDeniedException",
+    "message": "User: arn:aws:sts::123456789012:assumed-role/CdkWorkshopStack-HelloHitCounterHitCounterHandlerS-1234567890123/CdkWorkshopStack-HelloHitCounterHitCounterHandlerD-123456789012 is not authorized to perform: lambda:InvokeFunction on resource: arn:aws:lambda:ap-northeast-1:123456789012:function:CdkWorkshopStack-HelloHandler2E4FBA4D-123456789012 because no identity-based policy allows the lambda:InvokeFunction action",
+    "time": "2022-09-24T14:02:52.516Z",
+    "requestId": "2484f30b-70f7-42df-b9ac-134d995c1631",
+    "statusCode": 403,
+    "retryable": false,
+    "retryDelay": 4.445030300047104,
+    "stack": [
+        "AccessDeniedException: User: arn:aws:sts::123456789012:assumed-role/CdkWorkshopStack-HelloHitCounterHitCounterHandlerS-1234567890123/CdkWorkshopStack-HelloHitCounterHitCounterHandlerD-123456789012 is not authorized to perform: lambda:InvokeFunction on resource: arn:aws:lambda:ap-northeast-1:123456789012:function:CdkWorkshopStack-HelloHandler2E4FBA4D-123456789012 because no identity-based policy allows the lambda:InvokeFunction action",
+        "    at Object.extractError (/var/runtime/node_modules/aws-sdk/lib/protocol/json.js:52:27)",
+        "    at Request.extractError (/var/runtime/node_modules/aws-sdk/lib/protocol/rest_json.js:49:8)",
+        "    at Request.callListeners (/var/runtime/node_modules/aws-sdk/lib/sequential_executor.js:106:20)",
+        "    at Request.emit (/var/runtime/node_modules/aws-sdk/lib/sequential_executor.js:78:10)",
+        "    at Request.emit (/var/runtime/node_modules/aws-sdk/lib/request.js:686:14)",
+        "    at Request.transition (/var/runtime/node_modules/aws-sdk/lib/request.js:22:10)",
+        "    at AcceptorStateMachine.runTo (/var/runtime/node_modules/aws-sdk/lib/state_machine.js:14:12)",
+        "    at /var/runtime/node_modules/aws-sdk/lib/state_machine.js:26:10",
+        "    at Request.<anonymous> (/var/runtime/node_modules/aws-sdk/lib/request.js:38:9)",
+        "    at Request.<anonymous> (/var/runtime/node_modules/aws-sdk/lib/request.js:688:12)"
     ]
 }
 ```
 
-Another access denied, but this time, if you take a close look:
+Lambda関数の呼び出しエラーが発生していますが、今回は先ほどのDynamoDBへの書き込みエラーは出力されていません。
 
 ```
 User: <VERY-LONG-STRING> is not authorized to perform: lambda:InvokeFunction on resource: <VERY-LONG-STRING>"
 ```
 
-So it seems like our hit counter actually managed to write to the database. We can confirm by
-going to the [DynamoDB Console](https://console.aws.amazon.com/dynamodb/home):
+HitCounterはどうにかデータベースへの書き込みは行えたようです。
+[DynamoDBコンソール](https://console.aws.amazon.com/dynamodb/home)に移動して確認できます。
 
 ![](./logs5.png)
 
-But, we must also give our hit counter permissions to invoke the downstream lambda function.
+Lambda関数にDynamoDBのアクセス許可を与えたように、HitCounterにダウンストリームのLambda関数を呼び出すための権限を与える必要があります。
 
-## Grant invoke permissions
+## 呼び出し許可権限を付与する
 
-Add the highlighted lines to `lib/hitcounter.ts`:
+次のとおり、`lib/hitcounter.ts`に強調表示された行を追加します。
 
 {{<highlight ts "hl_lines=36-37">}}
 import * as cdk from 'aws-cdk-lib';
@@ -157,16 +163,15 @@ export class HitCounter extends Construct {
 }
 {{</highlight>}}
 
-## Diff
+## 差分確認
 
-You can check what this did using `cdk diff`:
+`cdk diff`を使用して、何が変更されたかをチェックします。
 
 ```
 cdk diff
 ```
 
-The **Resource** section should look something like this,
-which shows the IAM statement was added to the role:
+**Resource** セクションにHitCounterのロールに追加されたIAMポリシーが表示されます。
 
 ```
 Resources
@@ -191,23 +196,23 @@ Resources
             [ ] ]
 ```
 
-Which is exactly what we wanted.
+意図した通りの変更となっています。
 
-## Deploy
+## デプロイ
 
-Okay... let's give this another shot:
+再度デプロイしてみましょう。
 
 ```
 cdk deploy
 ```
 
-Then hit your endpoint with `curl` or with your web browser:
+デプロイが完了したら`curl`コマンド、またはWebブラウザでエンドポイントを呼び出してみましょう。
 
 ```
 curl -i https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod/
 ```
 
-Output should look like this:
+出力は次のようになります。
 
 ```
 HTTP/2 200 OK
@@ -216,7 +221,7 @@ HTTP/2 200 OK
 Hello, CDK! You've hit /
 ```
 
-> If you still get 5xx, give it a few seconds and try again. Sometimes API
-Gateway takes a little bit to "flip" the endpoint to use the new deployment.
+ようやくエラーが解消されました！次に進みましょう。
 
-# 😲
+> もし、5XXエラーとなる場合は、数秒待ってからもう一度試してください。
+> API Gatewayのエンドポイントに新しいデプロイを適用するのに少し時間がかかることがあります。
