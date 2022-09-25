@@ -4,18 +4,18 @@ weight = 60
 chapter = true
 +++
 
-# Clean up your stack
+# スタックのクリーンアップ
 
-When destroying a stack, resources may be deleted, retained, or snapshotted according to their deletion policy.
-By default, most resources will get deleted upon stack deletion, however that's not the case for all resources.
-The DynamoDB table will be retained by default. If you don't want to retain this table, we can set this in CDK
-code by using `RemovalPolicy`:
+スタックを破棄するとき、リソースはその削除ポリシーに従って削除、保持、スナップショットされるかもしれません。
+デフォルトでは、ほとんどのリソースはスタック削除時に削除されますが、すべてのリソースがそうなるわけではありません。
+DynamoDBのテーブルは、デフォルトで保持されます。このテーブルを保持したくない場合は、
+CDKのコードで `RemovalPolicy` を使って設定することができます。
 
-## Set the DynamoDB table to be deleted upon stack deletion
+## スタック削除時に削除するDynamoDBテーブルを設定する
 
-Edit `hitcounter.ts` and add the `removalPolicy` prop to the table
+`hitcounter.ts` を編集して、テーブルに `removalPolicy` プロパティを追加します。
 
-{{<highlight ts "hl_lines=25-26">}}
+{{<highlight ts "hl_lines=26">}}
 import * as cdk from 'aws-cdk-lib';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
@@ -64,31 +64,29 @@ export class HitCounter extends Construct {
 }
 {{</highlight>}}
 
-Additionally, the Lambda function created will generate CloudWatch logs that are
-permanently retained. These will not be tracked by CloudFormation since they are
-not part of the stack, so the logs will still persist. You will have to manually
-delete these in the console if desired.
+さらに、作成されたLambda関数は、永久に保持されるCloudWatchのログを生成します。
+これらはスタックの一部ではないので、CloudFormationでは追跡されず、ログは削除されずに残ります。
+CloudWatchのログを削除する場合は、コンソールでこれらを手動で削除する必要があります。
 
-Now that we know which resources will be deleted, we can proceed with deleting the
-stack. You can either delete the stack through the AWS CloudFormation console or use
-`cdk destroy`:
+どのリソースが削除されるかがわかったので、スタックの削除を進めましょう。
+AWS CloudFormationのコンソールからスタックを削除するか、`cdk destroy`を使用するかのどちらかです。
 
 ```
 cdk destroy
 ```
 
-You'll be asked:
+以下のように聞かれるはずです。
 
 ```
 Are you sure you want to delete: CdkWorkshopStack (y/n)?
 ```
 
-Hit "y" and you'll see your stack being destroyed.
+y "を押すと、スタックが削除されていく進捗が表示されます。
 
-The bootstrapping stack created through `cdk bootstrap` still exists. If you plan
-on using the CDK in the future (we hope you do!) do not delete this stack.
+`cdk bootstrap` によって作成されたブートストラップスタックは削除されません。
+将来的にCDKを使う予定があるのなら（そうしてほしい！）、このスタックを削除しないでください。
 
-If you would like to delete this stack, it will have to be done through the CloudFormation
-console. Head over to the CloudFormation console and delete the `CDKToolkit` stack. The S3
-bucket created will be retained by default, so if you want to avoid any unexpected charges,
-be sure to head to the S3 console and empty + delete the bucket generated from bootstrapping.
+`cdk bootstrap` によって作成されたスタックを削除したい場合は、CloudFormationコンソールから行う必要があります。
+CloudFormationコンソールから`CDKToolkit`スタックを削除してください。
+作成されたS3バケットは、デフォルトで保持されます。
+なので、予期せぬ課金を避けたい場合はS3コンソールから、ブートストラップで生成されたバケットを空にして、削除しておいてください。
