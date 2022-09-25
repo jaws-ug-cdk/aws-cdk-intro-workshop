@@ -58,13 +58,13 @@ cdk deploy
 
 ## 再テスト
 
-さて、デプロイが完了しました。テストをもう一度実行してみましょう（`curl`かWebブラウザのいずれかを使用してください）
+さて、デプロイが完了しました。テストをもう一度実行してみましょう（`curl`コマンドかWebブラウザのいずれかを使用してください）
 
 ```
 curl -i https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod/
 ```
 
-また？
+またもやエラーが発生しました。
 
 ```
 HTTP/2 502 Bad Gateway
@@ -73,9 +73,9 @@ HTTP/2 502 Bad Gateway
 {"message": "Internal server error"}
 ```
 
-# 😢
+# 再調査
 
-まだこの厄介な5xxエラーが発生しています！CloudWatchログをもう一度見てみましょう（「更新」をクリックします）。
+まだこの厄介な5xxエラーが発生しています。CloudWatchログをもう一度見てみましょう（「更新」をクリックします）。
 
 ```json
 {
@@ -110,12 +110,12 @@ Lambda関数の呼び出しエラーが発生していますが、今回は先�
 User: <VERY-LONG-STRING> is not authorized to perform: lambda:InvokeFunction on resource: <VERY-LONG-STRING>"
 ```
 
-ヒットカウンタはどうにかデータベースへの書き込みは行えたようです。
+HitCounterはどうにかデータベースへの書き込みは行えたようです。
 [DynamoDBコンソール](https://console.aws.amazon.com/dynamodb/home)に移動して確認できます。
 
 ![](./logs5.png)
 
-Lambda関数にDynamoDBのアクセス許可を与えたように、ヒットカウンタにダウンストリームのLambda関数を呼び出すための権限を与える必要があります。
+Lambda関数にDynamoDBのアクセス許可を与えたように、HitCounterにダウンストリームのLambda関数を呼び出すための権限を与える必要があります。
 
 ## 呼び出し許可権限を付与する
 
@@ -171,7 +171,7 @@ export class HitCounter extends Construct {
 cdk diff
 ```
 
-**Resource** セクションにヒットカウンタのロールに追加されたIAMポリシーが表示されます。
+**Resource** セクションにHitCounterのロールに追加されたIAMポリシーが表示されます。
 
 ```
 Resources
@@ -221,7 +221,7 @@ HTTP/2 200 OK
 Hello, CDK! You've hit /
 ```
 
+ようやくエラーが解消されました！次に進みましょう。
+
 > もし、5XXエラーとなる場合は、数秒待ってからもう一度試してください。
 > API Gatewayのエンドポイントに新しいデプロイを適用するのに少し時間がかかることがあります。
-
-# 😲
