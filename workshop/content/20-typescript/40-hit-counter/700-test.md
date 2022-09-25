@@ -1,5 +1,5 @@
 +++
-title = "Test the hit counter"
+title = "HitCounterのテスト"
 weight = 700
 +++
 

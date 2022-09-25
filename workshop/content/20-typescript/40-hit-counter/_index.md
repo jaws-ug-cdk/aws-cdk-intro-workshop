@@ -1,5 +1,5 @@
 +++
-title = "Writing constructs"
+title = "コンストラクトの作成"
 chapter = true
 weight = 40
 +++
