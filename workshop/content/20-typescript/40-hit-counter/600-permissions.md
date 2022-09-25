@@ -5,11 +5,9 @@ weight = 600
 
 ## LambdaがDynamoDBテーブルを読み書きできるようにする
 
-Let's give our Lambda's execution role permissions to read/write from our table.
-
 Lambdaの実行ロールに、DynamoDBテーブルの読み取り/書き込み権限を与えましょう。
 
-hitcounter.ts に戻り、次の強調表示された行を追加します。
+`hitcounter.ts`に戻り、次の強調表示された行を追加します。
 
 {{<highlight ts "hl_lines=33-34">}}
 import * as cdk from 'aws-cdk-lib';
