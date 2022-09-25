@@ -17,7 +17,7 @@ lambdaが動作するようになりましたね！
 今のところ、スタックを更新するために使えるツールは `cdk deploy` しかないように思えます。
 しかし、`cdk deploy`には時間がかかります。
 CloudFormationスタックをデプロイして、`lambda`ディレクトリをbootstrapバケットにアップロードしなければならないからです。
-lambdaのコードを変更するだけなら、CloudFormationスタックを更新する必要はないので、`cdk deploy`の部分は無駄な労力となります。
+lambdaのコードを変更するだけならCloudFormationスタックを更新する必要はないので、`cdk deploy`の部分は無駄な労力となります。
 
 本当に必要なのは、lambdaコードの更新だけなのです。
 それだけを行うための他のメカニズムがあれば最高なのですが...。
@@ -76,13 +76,13 @@ arn:aws:cloudformation:REGION:ACCOUNT-ID:stack/CdkWorkshopStack/STACK-ID
 {{% /notice %}}
 
 `CDK deploy --hotswap` を使えばデプロイ時間を短縮することができます。これはCloudFormation のデプロイの代わりにホットスワップデプロイが実行可能かどうかを評価してくれます。
-可能であれば、CDK CLIはAWSサービスAPIを使用して直接変更を行います。そうでない場合は、CloudFormationのフルデプロイメントを実行します。
+ホットスワップデプロイが可能であれば、CDK CLIはAWSサービスAPIを使用して直接変更を行います。そうでない場合は、CloudFormationのフルデプロイメントを実行します。
 
 ここでは、`cdk deploy --hotswap` を使用して、AWS Lambda のアセットコードにホットスワップ可能な変更をデプロイします。
 
 ## `cdk deploy --hotswap` にかかる時間を測ってみる
 
-`lambda/hello.js`のlambdaコードをもう一回変えてみましょう。
+`lambda/hello.js`のlambdaコードをもう一度変えてみましょう。
 
 {{<highlight js "hl_lines=6">}}
 exports.handler = async function(event) {
@@ -124,8 +124,8 @@ arn:aws:cloudformation:REGION:ACCOUNT-ID:stack/CdkWorkshopStack/STACK-ID
 ✨  Total time: 9.51s
 ```
 
-なんと、ホットスワップデプロイは3秒でした。さきほどのフルデプロイは67秒かかりました! 
-でも、警告メッセージをよく読んでください。
+さきほどのフルデプロイメントには67秒かかりましたが、なんと、ホットスワップデプロイはたったの3秒でデプロイが完了しました！
+しかし、警告メッセージが出ていますね。`--hotswap`フラグの使用上の注意ですのでよく読んでください。
 
 ```
 ⚠️ The --hotswap flag deliberately introduces CloudFormation drift to speed up deployments
@@ -135,9 +135,7 @@ arn:aws:cloudformation:REGION:ACCOUNT-ID:stack/CdkWorkshopStack/STACK-ID
 > `--hotswap` フラグは、デプロイメントを高速化するために意図的に CloudFormation のドリフトを導入しています。
 > これは開発のみに使用すべきです - 決して本番のStacksには使用しないでください！
 
-## 本当ににデプロイできてる？
-
-Wow that was fast. Did the code actually change? Let's go to the AWS Lambda Console and double check!
+## 本当にデプロイできたのでしょうか？
 
 高速にデプロイされることが確認できたと思います。
 実際にコードは変更されたのでしょうか？
@@ -166,13 +164,6 @@ AWS Lambda Consoleで再確認してみましょう!
 一度設定すれば、`cdk watch`を使用して、ホットスワップ可能な変更とCloudFormationのフルデプロイを必要とする変更の両方を検出することができます。
 
 ## `cdk.json` を編集する
-
-When the `cdk watch` command runs, the files that it observes are determined by the `"watch"` setting in the `cdk.json` file. 
-It has two sub-keys, `"include"` and `"exclude"`, each of which can be either a single string or an array of strings.
-Each entry is interpreted as a path relative to the location of the `cdk.json` file. 
-Globs, both `*` and `**`, are allowed to be used.
-
-Your `cdk.json` file should look similar to this:
 
 `cdk watch` コマンドが実行されると、監視するファイルは `cdk.json` ファイルにある `"watch"` 設定によって決定されます。
 この設定には、 `"include"` と `"exclude"` という2つのサブキーがあり、それぞれ単一の文字列または文字列の配列として使用できます。
@@ -286,7 +277,7 @@ arn:aws:cloudformation:REGION:ACCOUNT-ID:stack/CdkWorkshopStack/STACK-ID
 ✨  Total time: 8.11s
 ```
 
-## Wrap Up
+## まとめ
 
 このチュートリアルの残りの部分では、`cdk watch`の代わりに`cdk deploy`を使い続けます。
 しかし、必要であれば、単に `cdk watch` をオンにしておくこともできます。
