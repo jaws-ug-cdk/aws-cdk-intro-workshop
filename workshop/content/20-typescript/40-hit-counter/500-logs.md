@@ -12,7 +12,7 @@ weight = 500
 このワークショップでは、AWSコンソールからログを見つける方法を紹介します。
 
 1. [AWS Lambdaコンソール](https://console.aws.amazon.com/lambda/home)を開きます
-   （正しいリージョンに接続されていることを確認してください）。
+   （東京リージョンに接続されていることを確認してください）。
 
 2. **HitCounter** Lambda関数をクリックします（名前には`CdkWorkshopStack-HelloHitCounter`という文字列が含まれています)
 
@@ -59,4 +59,4 @@ weight = 500
 
 ---
 
-権限がないためにLambda関数によるDynamoDBテーブルへの書き込みが失敗していることがわかります。
+Lambda関数によるDynamoDBテーブルへの書き込みが、権限不足のため失敗していることがわかります。

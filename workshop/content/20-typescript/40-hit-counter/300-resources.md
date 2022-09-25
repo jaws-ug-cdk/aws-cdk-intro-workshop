@@ -5,7 +5,7 @@ weight = 300
 
 ## HitCounterコンストラクトにリソースを追加する
 
-次に、AWS Lambda関数とDynamoDBテーブルを`HitCounter`コンストラクトに定義します。
+次に、Lambda関数とDynamoDBテーブルを`HitCounter`コンストラクトに定義します。
 
 `lib/hitcounter.ts` に戻って、以下のコードを追記しましょう。
 
@@ -58,4 +58,4 @@ export class HitCounter extends Construct {
 CloudFormationテンプレート生成時にそれらの値を表示すると、"TOKEN" という値が得られます。
 この値は、CDKがこれらの遅延バインディング値をどのように表現するかを示しています。
 CDKはこれらの遅延バインディング値を未定の値として扱う必要があります。
-つまり、例えばそれらを連結することはできますが、コード内でそれらを解析（splitやsubstringなど）しても正しく動作することはありません。
+例えば、それらを連結することはできますが、コード内でそれらを解析（splitやsubstringなど）しても正しく動作することはありません。
