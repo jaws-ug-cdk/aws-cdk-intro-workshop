@@ -8,13 +8,12 @@ API GatewayはパブリックHTTPエンドポイントを公開します。こ�
 [curl](https://curl.haxx.se/)やウェブブラウザのようなHTTPクライアントでヒットできます。
 
 API Gatewayのルートには、
-[Lambda proxy integration](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-create-api-as-simple-proxy-for-lambda.html)
-を利用します。
+[Lambda proxy integration](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-create-api-as-simple-proxy-for-lambda.html)を利用します。
 つまり、どのURLパスへのリクエストも、直接Lambda関数にプロキシされ、関数からのレスポンスがユーザーに返されることになります。
 
 ## LambdaRestApi コンストラクトを追加する
 
-`lib/cdk-workshop-stack.ts` に戻り、APIエンドポイントを定義し、Lambda関数に関連付けましょう。
+`lib/cdk-workshop-stack.ts` に戻り、APIエンドポイントを定義してLambda関数に関連付けましょう。
 
 {{<highlight ts "hl_lines=4 17-20">}}
 import { Stack, StackProps } from 'aws-cdk-lib';
@@ -41,7 +40,7 @@ export class CdkWorkshopStack extends Stack {
 }
 {{</highlight>}}
 
-これで完了です。これで、すべてのリクエストをAWS Lambda関数にプロキシするAPI Gatewayが定義されました。
+以上です。これで、すべてのリクエストをAWS Lambda関数にプロキシするAPI Gatewayが定義されました。
 
 ## cdk diff
 
