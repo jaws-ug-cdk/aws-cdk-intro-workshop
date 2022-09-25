@@ -83,7 +83,7 @@ Are you sure you want to delete: CdkWorkshopStack (y/n)?
 `y`を押すと、スタックが削除されていく進捗が表示されます。
 
 `cdk bootstrap` によって作成されたブートストラップスタックは削除されません。
-**将来的にCDKを使う予定があるのなら（そうしてほしい！）、このスタックを削除しないでください**。
+**将来的にCDKを使う予定がある場合は、このスタックを削除しないでください**。
 
 `cdk bootstrap` によって作成されたスタックを削除したい場合は、CloudFormationコンソールから行う必要があります。
 CloudFormationコンソールから`CDKToolkit`スタックを削除してください。
