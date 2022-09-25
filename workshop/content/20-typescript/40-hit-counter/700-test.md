@@ -5,7 +5,7 @@ weight = 700
 
 ## テスト呼び出し
 
-いくつかのリクエストを実行して、HitCounterが機能するかどうかを確認しましょう。Webブラウザを使用することもできます。
+いくつかのリクエストを実行して、HitCounterが機能するかどうかを確認しましょう。`curl`コマンド、またはWebブラウザから確認ができます。
 
 ```
 curl https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod/
@@ -18,7 +18,7 @@ curl https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod/hello/world
 ## DynamoDBコンソールを開く
 
 1. [DynamoDBコンソール](https://console.aws.amazon.com/dynamodb/home)に移動します。
-2. テーブルを作成したリージョンにいることを確認してください。
+2. テーブルを作成したリージョンにいることを確認してください。手順どおりであれば東京リージョンにいることを確認しましょう。
 3. ナビゲーションペインから「テーブル」を選択し、`CdkWorkShopStack-HelloHitCounterHits`で始まるテーブルを選択してください。
 4. テーブルを開き、「テーブルアイテムの探索」を選択します。
 5. 各パスで取得したヒット数を確認します。
