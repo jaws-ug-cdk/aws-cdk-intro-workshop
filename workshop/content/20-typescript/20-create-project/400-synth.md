@@ -174,7 +174,7 @@ Rules:
 - **AWS::SQS::Queue** - キュー
 - **AWS::SNS::Topic** - トピック
 - **AWS::SNS::Subscription** - キューとトピックの間のサブスクリプション
-- **AWS::SQS::QueuePolicy** - このトピックがメッセージをキューに送信できるようにするIAMポリシー
+- **AWS::SQS::QueuePolicy** - このトピックがメッセージをキューに送信できるようにするリソースポリシー
 
 {{% notice info %}} 
 **AWS::CDK::Metadata** リソースは、ツールキットによって自動的に各スタックに追加されます。
