@@ -1,5 +1,5 @@
 +++
-title = "Project structure"
+title = "プロジェクト構造"
 weight = 300
 +++
 

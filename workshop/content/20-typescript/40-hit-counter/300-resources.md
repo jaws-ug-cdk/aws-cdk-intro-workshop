@@ -1,5 +1,5 @@
 +++
-title = "Define resources"
+title = "リソースの定義"
 weight = 300
 +++
 

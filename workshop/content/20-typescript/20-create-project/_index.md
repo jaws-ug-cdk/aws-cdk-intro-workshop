@@ -1,5 +1,5 @@
 +++
-title = "New Project"
+title = "新しいプロジェクト"
 chapter = true
 weight = 20
 +++
