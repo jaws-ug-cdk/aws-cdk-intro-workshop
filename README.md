@@ -20,7 +20,7 @@ $ open http://localhost:1313/
 
 ## Website Infrastructure
 
-The workshop is available at https://cdkworkshop.com. It's a static website
+The workshop is available at https://jaws-ug-cdk.github.io/aws-cdk-intro-workshop. It's a static website
 hosted on S3 and served through CloudFront.
 
 It is implemented as a (_surprise_) CDK application under the `cdkworkshop.com`

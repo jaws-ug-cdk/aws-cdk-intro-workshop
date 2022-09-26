@@ -1,5 +1,5 @@
 +++
-title = "Hit counter handler"
+title = "HitCounterハンドラー"
 weight = 100
 +++
 

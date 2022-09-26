@@ -1,10 +1,10 @@
 +++
-title = "TypeScript Workshop"
+title = "TypeScript ワークショップ"
 chapter = true
 weight = 20
 +++
 
-# The TypeScript Workshop
+# TypeScript ワークショップ
 
 本項では、TypeScriptの入門編を体験できます。
 

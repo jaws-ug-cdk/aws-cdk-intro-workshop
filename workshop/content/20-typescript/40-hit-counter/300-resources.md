@@ -1,12 +1,13 @@
 +++
-title = "Define resources"
+title = "リソースの定義"
 weight = 300
 +++
 
-## Add resources to the hit counter construct
+## HitCounterコンストラクトにリソースを追加する
 
-Now, let's define the AWS Lambda function and the DynamoDB table in our
-`HitCounter` construct. Go back to `lib/hitcounter.ts` and add the following highlighted code:
+次に、Lambda関数とDynamoDBテーブルを`HitCounter`コンストラクトに定義します。
+
+`lib/hitcounter.ts` に戻って、以下のコードを追記しましょう。
 
 {{<highlight ts "hl_lines=3 13-14 19-31">}}
 import * as cdk from 'aws-cdk-lib';
@@ -28,37 +29,33 @@ export class HitCounter extends Construct {
     super(scope, id);
 
     const table = new dynamodb.Table(this, 'Hits', {
-        partitionKey: { name: 'path', type: dynamodb.AttributeType.STRING }
+      partitionKey: { name: 'path', type: dynamodb.AttributeType.STRING }
     });
 
     this.handler = new lambda.Function(this, 'HitCounterHandler', {
-        runtime: lambda.Runtime.NODEJS_14_X,
-        handler: 'hitcounter.handler',
-        code: lambda.Code.fromAsset('lambda'),
-        environment: {
-            DOWNSTREAM_FUNCTION_NAME: props.downstream.functionName,
-            HITS_TABLE_NAME: table.tableName
-        }
+      runtime: lambda.Runtime.NODEJS_16_X,
+      handler: 'hitcounter.handler',
+      code: lambda.Code.fromAsset('lambda'),
+      environment: {
+        DOWNSTREAM_FUNCTION_NAME: props.downstream.functionName,
+        HITS_TABLE_NAME: table.tableName
+      }
     });
   }
 }
 {{</highlight>}}
 
-## What did we do here?
+## コードの解説
 
-This code is hopefully quite easy to understand:
+* DynamoDBテーブルに`path`パーティションキーを定義しました。
+* `lambda/hitcounter.handler`にバインドされるLambda関数を定義しました。
+* Lambdaの環境変数と`downstream.functionName`、`table.tableName`とを紐付けました。
 
- * We defined a DynamoDB table with `path` as the partition key.
- * We defined a Lambda function which is bound to the `lambda/hitcounter.handler` code.
- * We __wired__ the Lambda's environment variables to the `functionName` and `tableName`
-   of our resources.
+## 遅延バインディング値
 
-## Late-bound values
-
-The `functionName` and `tableName` properties are values that only resolve when
-we deploy our stack (notice that we haven't configured these physical names when
-we defined the table/function, only logical IDs). This means that if you print
-their values during synthesis, you will get a "TOKEN", which is how the CDK
-represents these late-bound values. You should treat tokens as *opaque strings*.
-This means you can concatenate them together for example, but don't be tempted
-to parse them in your code.
+`functionName`と`tableName`プロパティは、CloudFormationスタックをデプロイするタイミングで解決される値です
+（テーブル/関数を定義した時点では、まだ物理名が決まっていないことに注目してください。論理IDだけが決まっています。）。
+CloudFormationテンプレート生成時にそれらの値を表示すると、"TOKEN" という値が得られます。
+この値は、CDKがこれらの遅延バインディング値をどのように表現するかを示しています。
+CDKはこれらの遅延バインディング値を未定の値として扱う必要があります。
+例えば、それらを連結することはできますが、コード内でそれらを解析（splitやsubstringなど）しても正しく動作することはありません。

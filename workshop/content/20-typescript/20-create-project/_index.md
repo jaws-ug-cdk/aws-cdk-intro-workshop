@@ -1,14 +1,11 @@
 +++
-title = "New Project"
+title = "新しいプロジェクト"
 chapter = true
 weight = 20
 +++
 
-# Creating your first CDK project
+# CDKプロジェクトを作成する
 
-In this chapter we will use `cdk init` to create a new AWS CDK TypeScript project.
+この章では、 `cdk init` コマンドを使用し、新しいAWS CDK TypeScriptプロジェクトを作成します。
 
-We will also learn how to use the CDK Toolkit to synthesize an AWS
-CloudFormation template for the starter app and how to deploy your app into your
-account.
-
+また、CDK Toolkitを使用してスターターアプリ用のAWS CloudFormationテンプレートを生成する方法と、アプリをAWSにデプロイする方法についても学習します。
