@@ -59,7 +59,7 @@ Resources
 
 ## cdk deploy
 
-`cdk deploy`を実行したら、**次のセクションに進みます。**（デプロイの完了を見届けなくても良いです）
+`cdk deploy`を実行したら、**次のセクションに進みます。**
 
 ```
 cdk deploy
