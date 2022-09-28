@@ -125,21 +125,6 @@ IAM Policy Changes
 Resources
 [+] AWS::IAM::Role HelloHandler/ServiceRole HelloHandlerServiceRole11EF7C63 
 [+] AWS::Lambda::Function HelloHandler HelloHandler2E4FBA4D 
-
-
-NOTICES
-
-21902   apigateway: Unable to serialize value as aws-cdk-lib.aws_apigateway.IModel
-
-        Overview: Users of CDK in any language other than TS/JS cannot use
-                  values that return an instance of a deprecated class.
-
-        Affected versions: framework: >=2.41.0, framework: >=1.172.0
-
-        More information at: https://github.com/aws/aws-cdk/issues/21902
-
-
-If you don’t want to see a notice anymore, use "cdk acknowledge <id>". For example, "cdk acknowledge 21902".
 ```
 
 上記のとおり、このコードから **AWS::Lambda::Function** リソース用のCloudFormationテンプレートを生成しました。
