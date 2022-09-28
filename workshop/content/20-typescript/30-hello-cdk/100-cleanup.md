@@ -53,21 +53,6 @@ Resources
 [-] AWS::SQS::QueuePolicy CdkWorkshopQueuePolicyAF2494A5 destroy
 [-] AWS::SNS::Subscription CdkWorkshopQueueCdkWorkshopStackCdkWorkshopTopicD7BE96438B5AD106 destroy
 [-] AWS::SNS::Topic CdkWorkshopTopicD368A42F destroy
-
-
-NOTICES
-
-21902   apigateway: Unable to serialize value as aws-cdk-lib.aws_apigateway.IModel
-
-        Overview: Users of CDK in any language other than TS/JS cannot use
-                  values that return an instance of a deprecated class.
-
-        Affected versions: framework: >=2.41.0, framework: >=1.172.0
-
-        More information at: https://github.com/aws/aws-cdk/issues/21902
-
-
-If you don’t want to see a notice anymore, use "cdk acknowledge <id>". For example, "cdk acknowledge 21902".
 ```
 
 想定の通り、既存のリソースがすっかり削除されることになります。
