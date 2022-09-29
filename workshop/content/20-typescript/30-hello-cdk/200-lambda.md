@@ -5,17 +5,15 @@ weight = 200
 
 ## Lambda handler code
 
-We'll start with the AWS Lambda handler code.
+まずは、Lambda handlerのコードから書いていきます。
 
-1. Create a directory `lambda` in the root of your project tree (next to `bin`
-   and `lib`).
-2. TS CDK projects created with `cdk init` ignore all `.js` files by default. 
-   To track these files with git, add `!lambda/*.js` to your `.gitignore` file. 
-   This ensures that your Lambda assets are discoverable during the Pipelines 
-   section of this tutorial.
-3. Add a file called `lambda/hello.js` with the following contents:
+1. `cdk-workshop`ディレクトリに`lambda`ディレクトリを作成します。
+<!-- TODO: Cloud9はデフォルトで`.`で始まるファイルを非表示にしてる。何かしら対応が必要。tsでhandler書く手順にしちゃだめかなぁ。。 -->
+2. TS CDK プロジェクトを `cdk init` で作成すると、デフォルトではすべての `.js` ファイルを無視します。
+   これらのファイルをgitで追跡するには、 `.gitignore` ファイルに `!lambda/*.js` を追記してください。
+   これにより、このチュートリアルのパイプラインのセクションで、Lambdaアセットを発見することができます。
+3. `lambda/hello.js`というファイルを追加し、以下の内容を記述します。
 
----
 ```js
 exports.handler = async function(event) {
   console.log("request:", JSON.stringify(event, undefined, 2));
@@ -27,111 +25,86 @@ exports.handler = async function(event) {
 };
 ```
 
-This is a simple Lambda function which returns the text __"Hello, CDK! You've
-hit [url path]"__. The function's output also includes the HTTP status code and
-HTTP headers. These are used by API Gateway to formulate the HTTP response to
-the user.
+これは、**「Hello, CDK! You’ve hit [url path]」**というテキストを返す単純なLambda関数です。
+HTTPステータスコードとHTTPヘッダーが付加されたHTTPレスポンスとしてユーザーに応答するために、API Gatewayを使用します。
 
-{{% notice info %}} This lambda is provided in Javascript. For more information
-on writing lambda functions in your language of choice, please refer to the AWS
-Lambda documentation [here](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html).
+{{% notice info %}}
+このLambda関数はJavaScriptで実装されています。
+その他の言語での実装については[AWS Lambdaのドキュメント](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html)を参照してください。
 {{% /notice %}}
 
-## Install the AWS Lambda construct library
+## コピー＆ペーストは使わずにコードを書いてみましょう
 
-The AWS CDK is shipped with an extensive library of constructs called the __AWS
-Construct Library__. The construct library is divided into __modules__, one for
-each AWS service. For example, if you want to define an AWS Lambda function, we
-will need to use the AWS Lambda construct library.
-
-To discover and learn about AWS constructs, you can browse the [AWS Construct
-Library reference](https://docs.aws.amazon.com/cdk/api/latest/docs/aws-construct-library.html).
-
-![](./clib.png)
-
-## A few words about copying & pasting in this workshop
-
-In this workshop, we highly recommended to type CDK code instead of copying &
-pasting (there's usually not much to type). This way, you'll be able to fully
-experience what it's like to use the CDK. It's especially cool to see your IDE
-help you with auto-complete, inline documentation and type safety.
+このワークショップでは、コピー&ペーストをするのではなく、実際にCDKのコードを入力することを強く推奨します（通常、入力する量は多くありません）。
+これにより、CDKの使い方についてより理解していただけます。
+IDEがオートコンプリート、インラインドキュメント、およびタイプセーフに対応しているのがご理解いただけるでしょう。
 
 ![](./auto-complete.png)
 
-## Add an AWS Lambda Function to your stack
+## AWS Lambda関数をスタックに追加する
 
-Add an `import` statement at the beginning of `lib/cdk-workshop-stack.ts`, and a
-`lambda.Function` to your stack.
+`import`ステートメントを`lib/cdk-workshop-stack.ts`の冒頭に挿入し、`lambda.Function`をスタックに追加します。
 
+{{<highlight ts "hl_lines=3 9-14">}}
+import { Stack, StackProps } from 'aws-cdk-lib';
+import { Construct } from 'constructs';
+import * as lambda from 'aws-cdk-lib/aws-lambda'
 
-{{<highlight ts "hl_lines=2 8-13">}}
-import * as cdk from 'aws-cdk-lib';
-import * as lambda from 'aws-cdk-lib/aws-lambda';
-
-export class CdkWorkshopStack extends cdk.Stack {
-  constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
+export class CdkWorkshopStack extends Stack {
+  constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
     // defines an AWS Lambda resource
     const hello = new lambda.Function(this, 'HelloHandler', {
-      runtime: lambda.Runtime.NODEJS_14_X,    // execution environment
+      runtime: lambda.Runtime.NODEJS_16_X,    // execution environment
       code: lambda.Code.fromAsset('lambda'),  // code loaded from "lambda" directory
-      handler: 'hello.handler'                // file is "hello", function is "handler"
+      handler: 'hello.handler',               // file is "hello", function is "handler"
     });
   }
 }
 {{</highlight>}}
 
-A few things to notice:
+注目すべきいくつかの点：
 
-- Our function uses the NodeJS (`NODEJS_14_X`) runtime
-- The handler code is loaded from the `lambda` directory which we created
-  earlier. Path is relative to where you execute `cdk` from, which is the
-  project's root directory
-- The name of the handler function is `hello.handler` ("hello" is the name of
-  the file and "handler" is the exported function name)
+- この関数は`NODEJS_16_X`(Nodejs v16.x)ランタイムを使用します。
+- ハンドラーコードは、先程作った `lambda` ディレクトリからロードされます。
+  パスは、`cdk` コマンドが実行されたディレクトリから相対パスです。
+- ハンドラー関数の名前は `hello.handler` （「hello」はファイル名、「handler」は関数名です）
 
-## A word about constructs and constructors
+## コンストラクト(constructs) と コンストラクター(constructors) について
 
-As you can see, the class constructors of both `CdkWorkshopStack` and
-`lambda.Function` (and many other classes in the CDK) have the signature
-`(scope, id, props)`. This is because all of these classes are __constructs__.
-Constructs are the basic building block of CDK apps. They represent abstract
-"cloud components" which can be composed together into higher level abstractions
-via scopes. Scopes can include constructs, which in turn can include other
-constructs, etc.
+ご覧のとおり、`CdkWorkshopStack`と`lambda.Function`の両方のコンストラクタークラス（およびCDKの他の多くのクラス）は`(scope, id, props)`という同じような引数を受け取ります。
+これは、これらのクラスがすべて**コンストラクタ**であるためです。
+コンストラクトはCDKアプリの基本的な構成要素です。
+それらは「クラウドコンポーネント」を表現します。クラウドコンポーネントはスコープを介してより高いレベルの抽象化に構築できます。
+スコープにはコンストラクトを含めることができ、そのコンストラクトには他のコンストラクトなどを含めることができます。
 
-Constructs are always created in the scope of another construct and must always
-have an identifier which must be unique within the scope it's created.
-Therefore, construct initializers (constructors) will always have the following
-signature:
+コンストラクトは常に別のコンストラクトのスコープ内で作成され、作成されたスコープ内で一意でなければならない識別子（id）を持っている必要があります。
+したがって、コンストラクト初期化子（コンストラクター）には常に次のシグネチャが必要です。
 
-1. __`scope`__: the first argument is always the scope in which this construct
-   is created. In almost all cases, you'll be defining constructs within the
-   scope of _current_ construct, which means you'll usually just want to pass
-   `this` for the first argument. Make a habit out of it.
-2. __`id`__: the second argument is the __local identity__ of the construct.
-   It's an ID that has to be unique amongst construct within the same scope. The
-   CDK uses this identity to calculate the CloudFormation [Logical
-   ID](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html)
-   for each resource defined within this scope. *To read more about IDs in the
-   CDK, see the* [CDK user manual](https://docs.aws.amazon.com/cdk/latest/guide/identifiers.html#identifiers_logical_ids).
-3. __`props`__: the last (sometimes optional) argument is always a set of
-   initialization properties. Those are specific to each construct. For example,
-   the `lambda.Function` construct accepts properties like `runtime`, `code` and
-   `handler`. You can explore the various options using your IDE's auto-complete
-   or in the [online
-   documentation](https://docs.aws.amazon.com/cdk/api/latest/docs/aws-lambda-readme.html).
+1. **`scope：`** : 最初の引数には、この構成が作成されるスコープを必ず指定します。
+   ほとんどすべての場合、現在の コンストラクトスコープ内でコンストラクトを定義することになります。
+   つまり、通常最初の引数には`this`を渡すだけです。
+
+2. **`id`** ： 2番目の引数は、構造の**ローカルID**です。
+   これは、同じスコープ内のコンストラクト間で一意である必要があるIDです。
+   CDKはこのIDを使用して、 このスコープ内で定義された各リソースの[CloudFormation 論理ID](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html)を計算します。
+   *CDKのIDの詳細*については、[CDKユーザーマニュアル](https://docs.aws.amazon.com/cdk/latest/guide/identifiers.html#identifiers_logical_ids)を参照してください。
+
+3. **`props`** : 最後の（場合によっては不要である場合もある）引数は、初期化プロパティのセットです。
+   これらは各コンストラクトで固有です。
+   たとえば、`lambda.Function`コンストラクトは`runtime`、`code`、`handler`のようなプロパティを受け取ります。
+   IDEのオートコンプリートまたは[オンラインドキュメント](https://docs.aws.amazon.com/cdk/api/latest/docs/aws-lambda-readme.html)を使用して、さまざまなオプションを調べられます。
 
 ## Diff
 
-Save your code, and let's take a quick look at the diff before we deploy:
+コードを保存し、デプロイする前に差分を見てみましょう。
 
 ```
 cdk diff
 ```
 
-Output would look like this:
+出力は次のようになります。
 
 ```text
 Stack CdkWorkshopStack
@@ -149,63 +122,54 @@ IAM Policy Changes
 └───┴─────────────────────────────┴────────────────────────────────────────────────────────────────────────────────┘
 (NOTE: There may be security-related changes not in this list. See https://github.com/aws/aws-cdk/issues/1299)
 
-Parameters
-[+] Parameter AssetParameters/3342065582ab8a3599385f447c9f5d5b141c726eb5dc468594ec8450a97f3cb7/S3Bucket AssetParameters3342065582ab8a3599385f447c9f5d5b141c726eb5dc468594ec8450a97f3cb7S3BucketEB5CA0D6: {"Type":"String","Description":"S3 bucket for asset \"3342065582ab8a3599385f447c9f5d5b141c726eb5dc468594ec8450a97f3cb7\""}
-[+] Parameter AssetParameters/3342065582ab8a3599385f447c9f5d5b141c726eb5dc468594ec8450a97f3cb7/S3VersionKey AssetParameters3342065582ab8a3599385f447c9f5d5b141c726eb5dc468594ec8450a97f3cb7S3VersionKeyC5F120D1: {"Type":"String","Description":"S3 key for asset version \"3342065582ab8a3599385f447c9f5d5b141c726eb5dc468594ec8450a97f3cb7\""}
-[+] Parameter AssetParameters/3342065582ab8a3599385f447c9f5d5b141c726eb5dc468594ec8450a97f3cb7/ArtifactHash AssetParameters3342065582ab8a3599385f447c9f5d5b141c726eb5dc468594ec8450a97f3cb7ArtifactHashBAACCCD2: {"Type":"String","Description":"Artifact hash for asset \"3342065582ab8a3599385f447c9f5d5b141c726eb5dc468594ec8450a97f3cb7\""}
-
 Resources
-[+] AWS::IAM::Role HelloHandler/ServiceRole HelloHandlerServiceRole11EF7C63
-[+] AWS::Lambda::Function HelloHandler HelloHandler2E4FBA4D
+[+] AWS::IAM::Role HelloHandler/ServiceRole HelloHandlerServiceRole11EF7C63 
+[+] AWS::Lambda::Function HelloHandler HelloHandler2E4FBA4D 
 ```
 
-As you can see, this code synthesizes an __AWS::Lambda::Function__ resource. It
-also synthesized a couple of [CloudFormation
-parameters](https://docs.aws.amazon.com/cdk/latest/guide/get_cfn_param.html)
-that are used by the toolkit to propagate the location of the handler code.
+上記のとおり、このコードから **AWS::Lambda::Function** リソース用のCloudFormationテンプレートを生成しました。
+また、ツールキットがハンドラーコードの場所を伝達するためにいくつかの[CloudFormationパラメーター](https://docs.aws.amazon.com/cdk/latest/guide/get_cfn_param.html)を利用しています。
 
 ## Deploy
 
-Let's deploy:
+次にデプロイをします。
 
 ```
 cdk deploy
 ```
 
-You'll notice that `cdk deploy` not only deployed your CloudFormation stack, but
-also archived and uploaded the `lambda` directory from your disk to the
-bootstrap bucket.
+`cdk deploy` を実行すると、CloudFormationスタックをデプロイするだけでなく、
+初期構築したS3バケットに対して、ローカルの `lambda` ディレクトリを圧縮後、アップロードしていることがが分かるでしょう。
 
 ## Testing our function
 
-Let's go to the AWS Lambda Console and test our function.
+AWS Lambdaコンソールに移動して、Lambda関数をテストしましょう。
 
-1. Open the [AWS Lambda
-   Console](https://console.aws.amazon.com/lambda/home#/functions) (make sure
-   you are in the correct region).
+1. [AWS Lambdaコンソール](https://console.aws.amazon.com/lambda/home#/functions) を開きます
+   （正しいリージョンにいることを確認してください）。
 
-    You should see our function:
+   Lambda関数が表示されます。
 
-    ![](./lambda-1.png)
+   ![](./lambda-1.png)
 
-2. Click on the function name to go to the console.
+2. 関数名をクリックして、コンソールを移動します。
 
-3. Click on the __Test__ button to open the __Configure test event__ dialog:
+3. **テスト**タブをクリックします。
 
     ![](./lambda-2.png)
 
-4. Select __Amazon API Gateway AWS Proxy__ from the __Event template__ list.
+5. **イベント名**に`test`を入力します。
 
-5. Enter `test` under __Event name__.
+4. **テンプレート**リストから**Amazon API Gateway AWS Proxy**を選択します。
 
     ![](./lambda-3.png)
 
-6. Hit __Create__.
+6. **保存**をクリックします。
 
-7. Click __Test__ again and wait for the execution to complete.
+7. **テスト**をクリックし、実行が完了するまで待ちます。
 
-8. Expand __Details__ in the __Execution result__ pane and you should see our expected output:
+8. **実行結果**ペインで**詳細**を展開すると、出力が表示されます。
 
-    ![](./lambda-4.png)
+   ![](./lambda-4.png)
 
 # 👏

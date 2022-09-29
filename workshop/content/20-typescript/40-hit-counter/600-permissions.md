@@ -1,5 +1,5 @@
 +++
-title = "Granting permissions"
+title = "パーミッションの付与"
 weight = 600
 +++
 
