@@ -3,10 +3,9 @@ title = "HitCounterのテスト"
 weight = 700
 +++
 
-## Issue a few test requests
+## テスト呼び出し
 
-Let's issue a few requests and see if our hit counter works. You can also use
-your web browser to do that:
+いくつかのリクエストを実行して、HitCounterが機能するかどうかを確認しましょう。`curl`コマンド、またはWebブラウザから確認ができます。
 
 ```
 curl https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod/
@@ -16,32 +15,28 @@ curl https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod/hello/world
 curl https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod/hello/world
 ```
 
-## Open DynamoDB console
+## DynamoDBコンソールを開く
 
-1. Go to the [DynamoDB console](https://console.aws.amazon.com/dynamodb/home).
-2. Make sure you are in the region where you created the table.
-3. Select `Tables` in the navigation pane and select the table that starts with `CdkWorkdShopStack-HelloHitCounterHits`.
-4. Open the table and select "Items".
-5. You should see how many hits you got for each path.
+1. [DynamoDBコンソール](https://console.aws.amazon.com/dynamodb/home)に移動します。
+2. テーブルを作成したリージョンにいることを確認してください。手順どおりであれば東京リージョンにいることを確認しましょう。
+3. ナビゲーションペインから「テーブル」を選択し、`CdkWorkShopStack-HelloHitCounterHits`で始まるテーブルを選択してください。
+4. テーブルを開き、「テーブルアイテムの探索」を選択します。
+5. 各パスで取得したヒット数を確認します。
 
     ![](./dynamo1.png)
 
-6. Try hitting a new path and refresh the Items view.
-   You should see a new item with a `hits` count of one.
+6. 新しいパスでAPIを叩き、アイテムビューを更新してください。
+   `hits`カウントが1の新しいアイテムが表示されます。
 
 ## Good job!
 
-The cool thing about our `HitCounter` is that it's quite useful. It basically
-allows anyone to "attach" it to any Lambda function that serves as an API
-Gateway proxy backend and it will log hits to this API.
+`HitCounter`は大変便利だということがご理解いただけたと思います。
+基本的に、誰でもAPI Gatewayのプロキシバックエンドとして機能するLambda関数にアタッチでき、このAPIのカウントを記録できます。
 
-Since our hit counter is a simple JavaScript class, you could package it into an
-npm module and publish it to [npmjs.org](http://npmjs.org/), which is the
-JavaScript package manager. Then, anyone could `npm install` it and add it to
-their CDK apps.
+HitCounterはシンプルなJavaScriptクラスであるため、npmモジュールをパッケージ化して、
+JavaScriptパッケージマネージャーである[npmjs.org](http://npmjs.org/)に公開できます。
+公開後は誰でも`npm install` でインストールでき、CDKアプリに追加できます。
 
 -----
 
-In the next chapter we __consume__ a construct library published to
-npm, which enables us to view the contents of our hit counter table from any
-browser.
+現時点で用意しているハンズオンはコンテンツは以上です。おつかれさまでした。
