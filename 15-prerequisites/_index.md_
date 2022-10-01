@@ -1,22 +1,22 @@
 +++
-title = "Prerequisites"
+title = "前提条件"
 chapter = true
 weight = 15
 +++
 
-# Prerequisites for the Workshop
+# ワークショップを進める上での前提条件
 
-To perform this workshop, you'll need the following:
+このワークショップを行うには、以下のものが必要です。
 
 {{% children showhidden="false" %}}
 
-Node.js is always required to use CDK, but all other language prerequisites 
-are only required if building a CDK app in that specific language
+Node.jsはCDKを使用するために常に必要ですが、他のすべての言語の前提条件は、その特定の言語でCDKアプリを構築する場合にのみ必要です。
 
-You can skip any of these steps if you have these tools already installed on
-your machine.
+これらのツールがすでにマシンにインストールされている場合は、これらのステップをスキップすることができます。
 
-Click on the arrow to the right to continue to the first step.
+IDEを含む必要なソフトウェアがすでにインストールされた環境が欲しい場合は、AWS Cloud9を使うことで簡単に開発環境が手に入ります。
+
+最初のステップに進むには、右側の矢印をクリックします。
 
 ## See Also
 
