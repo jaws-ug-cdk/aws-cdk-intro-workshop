@@ -173,9 +173,9 @@ cdk watch
 
 これで初期デプロイが始まり、すぐに `cdk.json` で指定したファイルの監視を開始します。
 
-もう一度、`lambda/hello.js` を変更してみましょう。
+もう一度、`lambda/hello.ts` を変更してみましょう。
 
-{{<highlight js "hl_lines=6">}}
+{{<highlight ts "hl_lines=6">}}
 export const handler: AWSLambda.APIGatewayProxyHandler = async (event) => {
   console.log("request:", JSON.stringify(event, undefined, 2));
   return {
