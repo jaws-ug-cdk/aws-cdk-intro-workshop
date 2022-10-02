@@ -27,7 +27,8 @@ export const handler: AWSLambda.APIGatewayProxyHandler = async (event) => {
 HTTPステータスコードとHTTPヘッダーが付加されたHTTPレスポンスとしてユーザーに応答するために、API Gatewayを使用します。
 
 {{% notice info %}}
-このLambda関数はAWS Lambda上で動作しないTypeScriptで実装されていますが、デプロイ時にはCDKが[esbuild](https://esbuild.github.io/)でJavaScriptにビルドするため、開発者はデプロイ前にTypeScriptからJavaScriptの事前ビルド作業を行う必要はありません。
+このLambda関数はTypeScriptで実装されていますが、実際のLambda上ではJavaScriptに変換されたコードが動作します。
+これは、デプロイ時にはCDKが[esbuild](https://esbuild.github.io/)でJavaScriptにビルドしてくれるためです。
 その他の言語での実装については[AWS Lambdaのドキュメント](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html)を参照してください。
 {{% /notice %}}
 
