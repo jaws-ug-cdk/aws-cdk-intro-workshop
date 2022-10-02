@@ -12,7 +12,7 @@ weight = 200
 2. `cdk-workshop`ディレクトリに`lambda`ディレクトリを作成します。
 3. `lambda/hello.ts`というファイルを追加し、以下の内容を記述します。
 
-```js
+```ts
 export const handler: AWSLambda.APIGatewayProxyHandler = async (event) => {
   console.log("request:", JSON.stringify(event, undefined, 2));
   return {

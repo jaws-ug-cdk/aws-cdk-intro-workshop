@@ -9,7 +9,7 @@ HitCounterのLambdaハンドラーコードを記述しましょう。
 
 `lambda/hitcounter.ts`を作成し、次のコードを追記してください。
 
-```js
+```ts
 import { DynamoDB, Lambda } from 'aws-sdk';
 
 export const handler: AWSLambda.APIGatewayProxyHandler = async (event) => {
