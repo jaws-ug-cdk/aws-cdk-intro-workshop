@@ -4,7 +4,9 @@ weight = 60
 chapter = true
 +++
 
-# スタックのクリーンアップ
+# リソースのクリーンアップ
+
+## スタックのクリーンアップ
 
 スタックを破棄するとき、リソースはその削除ポリシーに従って「削除」、「保持」、「スナップショット」のいずれかで処理されます。
 デフォルトでは、ほとんどのリソースはスタック削除時に削除されますが、すべてのリソースがそうなるわけではありません。
@@ -89,3 +91,13 @@ Are you sure you want to delete: CdkWorkshopStack (y/n)?
 CloudFormationコンソールから`CDKToolkit`スタックを削除してください。
 作成されたS3バケットは、デフォルトで保持されます。
 予期せぬ課金を避けたい場合はS3コンソールから、ブートストラップで生成されたバケットを空にして、削除しておいてください。
+
+## Cloud9 のクリーンアップ
+
+CDK の実行環境として使用した Cloud 9 を削除します。AWS マネージメントコンソールから Cloud 9 を開いて、「Delete」ボタンを押します。
+
+![cloud9-delete-button](./cloud9-delete-1.png)
+
+確認画面で「Delete」と入力すると削除できます。
+
+![cloud9-delete-confirmation-screen](./cloud9-delete-2.png)
