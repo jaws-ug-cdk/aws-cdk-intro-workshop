@@ -9,37 +9,34 @@ Lambdaの実行ロールに、DynamoDBテーブルの読み取り/書き込み�
 
 `hitcounter.ts`に戻り、次の強調表示された行を追加します。
 
-{{<highlight ts "hl_lines=33-34">}}
-import * as cdk from 'aws-cdk-lib';
-import * as lambda from 'aws-cdk-lib/aws-lambda';
-import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
+{{<highlight ts "hl_lines=30-31">}}
+import { AttributeType, Table } from 'aws-cdk-lib/aws-dynamodb';
+import { IFunction, Runtime } from 'aws-cdk-lib/aws-lambda';
+import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { Construct } from 'constructs';
 
 export interface HitCounterProps {
   /** the function for which we want to count url hits **/
-  downstream: lambda.IFunction;
+  downstream: IFunction;
 }
 
 export class HitCounter extends Construct {
-
   /** allows accessing the counter function */
-  public readonly handler: lambda.Function;
-
+  public readonly handler: IFunction;
   constructor(scope: Construct, id: string, props: HitCounterProps) {
     super(scope, id);
 
-    const table = new dynamodb.Table(this, 'Hits', {
-        partitionKey: { name: 'path', type: dynamodb.AttributeType.STRING }
+    const table = new Table(this, 'Hits', {
+      partitionKey: { name: 'path', type: AttributeType.STRING },
     });
 
-    this.handler = new lambda.Function(this, 'HitCounterHandler', {
-      runtime: lambda.Runtime.NODEJS_14_X,
-      handler: 'hitcounter.handler',
-      code: lambda.Code.fromAsset('lambda'),
+    this.handler = new NodejsFunction(this, 'HitCounterHandler', {
+      runtime: Runtime.NODEJS_16_X,
+      entry: 'lambda/hitcounter.ts',
       environment: {
         DOWNSTREAM_FUNCTION_NAME: props.downstream.functionName,
-        HITS_TABLE_NAME: table.tableName
-      }
+        HITS_TABLE_NAME: table.tableName,
+      },
     });
 
     // grant the lambda role read/write permissions to our table
@@ -121,37 +118,34 @@ Lambda関数にDynamoDBのアクセス許可を与えたように、HitCounter�
 
 次のとおり、`lib/hitcounter.ts`に強調表示された行を追加します。
 
-{{<highlight ts "hl_lines=36-37">}}
-import * as cdk from 'aws-cdk-lib';
-import * as lambda from 'aws-cdk-lib/aws-lambda';
-import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
+{{<highlight ts "hl_lines=33-34">}}
+import { AttributeType, Table } from 'aws-cdk-lib/aws-dynamodb';
+import { IFunction, Runtime } from 'aws-cdk-lib/aws-lambda';
+import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { Construct } from 'constructs';
 
 export interface HitCounterProps {
   /** the function for which we want to count url hits **/
-  downstream: lambda.IFunction;
+  downstream: IFunction;
 }
 
 export class HitCounter extends Construct {
-
   /** allows accessing the counter function */
-  public readonly handler: lambda.Function;
-
+  public readonly handler: IFunction;
   constructor(scope: Construct, id: string, props: HitCounterProps) {
     super(scope, id);
 
-    const table = new dynamodb.Table(this, 'Hits', {
-        partitionKey: { name: 'path', type: dynamodb.AttributeType.STRING }
+    const table = new Table(this, 'Hits', {
+      partitionKey: { name: 'path', type: AttributeType.STRING },
     });
 
-    this.handler = new lambda.Function(this, 'HitCounterHandler', {
-      runtime: lambda.Runtime.NODEJS_14_X,
-      handler: 'hitcounter.handler',
-      code: lambda.Code.fromAsset('lambda'),
+    this.handler = new NodejsFunction(this, 'HitCounterHandler', {
+      runtime: Runtime.NODEJS_16_X,
+      entry: 'lambda/hitcounter.ts',
       environment: {
         DOWNSTREAM_FUNCTION_NAME: props.downstream.functionName,
-        HITS_TABLE_NAME: table.tableName
-      }
+        HITS_TABLE_NAME: table.tableName,
+      },
     });
 
     // grant the lambda role read/write permissions to our table

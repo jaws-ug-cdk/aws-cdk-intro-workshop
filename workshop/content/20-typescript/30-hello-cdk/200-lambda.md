@@ -7,15 +7,13 @@ weight = 200
 
 まずは、Lambda handlerのコードから書いていきます。
 
-1. `cdk-workshop`ディレクトリに`lambda`ディレクトリを作成します。
-<!-- TODO: Cloud9はデフォルトで`.`で始まるファイルを非表示にしてる。何かしら対応が必要。tsでhandler書く手順にしちゃだめかなぁ。。 -->
-2. TS CDK プロジェクトを `cdk init` で作成すると、デフォルトではすべての `.js` ファイルを無視します。
-   これらのファイルをgitで追跡するには、 `.gitignore` ファイルに `!lambda/*.js` を追記してください。
-   これにより、このチュートリアルのパイプラインのセクションで、Lambdaアセットを発見することができます。
-3. `lambda/hello.js`というファイルを追加し、以下の内容を記述します。
+1. 次のコマンドでLambdaをTypeScriptで記述しやすくするモジュールをインストールします。
+   1. `npm install --save-dev esbuild@0 @types/aws-lambda aws-sdk`
+2. `cdk-workshop`ディレクトリに`lambda`ディレクトリを作成します。
+3. `lambda/hello.ts`というファイルを追加し、以下の内容を記述します。
 
-```js
-exports.handler = async function(event) {
+```ts
+export const handler: AWSLambda.APIGatewayProxyHandler = async (event) => {
   console.log("request:", JSON.stringify(event, undefined, 2));
   return {
     statusCode: 200,
@@ -29,7 +27,8 @@ exports.handler = async function(event) {
 HTTPステータスコードとHTTPヘッダーが付加されたHTTPレスポンスとしてユーザーに応答するために、API Gatewayを使用します。
 
 {{% notice info %}}
-このLambda関数はJavaScriptで実装されています。
+このLambda関数はTypeScriptで実装されていますが、実際のLambda上ではJavaScriptに変換されたコードが動作します。
+これは、デプロイ時にはCDKが[esbuild](https://esbuild.github.io/)でJavaScriptにビルドしてくれるためです。
 その他の言語での実装については[AWS Lambdaのドキュメント](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html)を参照してください。
 {{% /notice %}}
 
@@ -39,7 +38,7 @@ HTTPステータスコードとHTTPヘッダーが付加されたHTTPレスポ�
 これにより、CDKの使い方についてより理解していただけます。
 IDEがオートコンプリート、インラインドキュメント、およびタイプセーフに対応しているのがご理解いただけるでしょう。
 
-![](./auto-complete.png)
+![](./auto-complete.webp)
 
 ## AWS Lambda関数をスタックに追加する
 
@@ -47,18 +46,18 @@ IDEがオートコンプリート、インラインドキュメント、およ�
 
 {{<highlight ts "hl_lines=3 9-14">}}
 import { Stack, StackProps } from 'aws-cdk-lib';
+import { Runtime } from 'aws-cdk-lib/aws-lambda';
+import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { Construct } from 'constructs';
-import * as lambda from 'aws-cdk-lib/aws-lambda'
 
 export class CdkWorkshopStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    // defines an AWS Lambda resource
-    const hello = new lambda.Function(this, 'HelloHandler', {
-      runtime: lambda.Runtime.NODEJS_16_X,    // execution environment
-      code: lambda.Code.fromAsset('lambda'),  // code loaded from "lambda" directory
-      handler: 'hello.handler',               // file is "hello", function is "handler"
+    // AWS Lambdaリソースを定義
+    const hello = new NodejsFunction(this, 'HelloHandler', {
+      runtime: Runtime.NODEJS_16_X, // 実行環境
+      entry: 'lambda/hello.ts', // エントリーファイルはhello.ts
     });
   }
 }
@@ -69,11 +68,10 @@ export class CdkWorkshopStack extends Stack {
 - この関数は`NODEJS_16_X`(Nodejs v16.x)ランタイムを使用します。
 - ハンドラーコードは、先程作った `lambda` ディレクトリからロードされます。
   パスは、`cdk` コマンドが実行されたディレクトリから相対パスです。
-- ハンドラー関数の名前は `hello.handler` （「hello」はファイル名、「handler」は関数名です）
 
 ## コンストラクト(constructs) と コンストラクター(constructors) について
 
-ご覧のとおり、`CdkWorkshopStack`と`lambda.Function`の両方のコンストラクタークラス（およびCDKの他の多くのクラス）は`(scope, id, props)`という同じような引数を受け取ります。
+ご覧のとおり、`CdkWorkshopStack`と`NodejsFunction`の両方のコンストラクタークラス（およびCDKの他の多くのクラス）は`(scope, id, props)`という同じような引数を受け取ります。
 これは、これらのクラスがすべて**コンストラクタ**であるためです。
 コンストラクトはCDKアプリの基本的な構成要素です。
 それらは「クラウドコンポーネント」を表現します。クラウドコンポーネントはスコープを介してより高いレベルの抽象化に構築できます。
@@ -93,7 +91,7 @@ export class CdkWorkshopStack extends Stack {
 
 3. **`props`** : 最後の（場合によっては不要である場合もある）引数は、初期化プロパティのセットです。
    これらは各コンストラクトで固有です。
-   たとえば、`lambda.Function`コンストラクトは`runtime`、`code`、`handler`のようなプロパティを受け取ります。
+   たとえば、`NodejsFunction`コンストラクトは`runtime`、`entry`のようなプロパティを受け取ります。
    IDEのオートコンプリートまたは[オンラインドキュメント](https://docs.aws.amazon.com/cdk/api/latest/docs/aws-lambda-readme.html)を使用して、さまざまなオプションを調べられます。
 
 ## Diff
@@ -145,7 +143,7 @@ cdk deploy
 
 AWS Lambdaコンソールに移動して、Lambda関数をテストしましょう。
 
-1. [AWS Lambdaコンソール](https://console.aws.amazon.com/lambda/home#/functions) を開きます
+1. [AWS Lambdaコンソール](https://console.aws.amazon.com/lambda/home#/functions?fo=and&o0=%3A&v0=CdkWorkshopStack-HelloHandler) を開きます
    （正しいリージョンにいることを確認してください）。
 
    Lambda関数が表示されます。

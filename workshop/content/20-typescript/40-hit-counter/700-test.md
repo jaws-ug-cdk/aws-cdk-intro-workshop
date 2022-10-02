@@ -33,7 +33,7 @@ curl https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod/hello/world
 `HitCounter`は大変便利だということがご理解いただけたと思います。
 基本的に、誰でもAPI Gatewayのプロキシバックエンドとして機能するLambda関数にアタッチでき、このAPIのカウントを記録できます。
 
-HitCounterはシンプルなJavaScriptクラスであるため、npmモジュールをパッケージ化して、
+HitCounterはTypeScriptクラスであるため、npmモジュールをパッケージ化して、
 JavaScriptパッケージマネージャーである[npmjs.org](http://npmjs.org/)に公開できます。
 公開後は誰でも`npm install` でインストールでき、CDKアプリに追加できます。
 

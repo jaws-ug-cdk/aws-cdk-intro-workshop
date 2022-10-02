@@ -15,25 +15,25 @@ API Gatewayのルートには、
 
 `lib/cdk-workshop-stack.ts` に戻り、APIエンドポイントを定義してLambda関数に関連付けましょう。
 
-{{<highlight ts "hl_lines=4 17-20">}}
+{{<highlight ts "hl_lines=2 17-20">}}
 import { Stack, StackProps } from 'aws-cdk-lib';
+import { LambdaRestApi } from 'aws-cdk-lib/aws-apigateway';
+import { Runtime } from 'aws-cdk-lib/aws-lambda';
+import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { Construct } from 'constructs';
-import * as lambda from 'aws-cdk-lib/aws-lambda'
-import * as apigw from 'aws-cdk-lib/aws-apigateway';
 
 export class CdkWorkshopStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    // defines an AWS Lambda resource
-    const hello = new lambda.Function(this, 'HelloHandler', {
-      runtime: lambda.Runtime.NODEJS_16_X,   // execution environment
-      code: lambda.Code.fromAsset('lambda'), // code loaded from "lambda" directory
-      handler: 'hello.handler',              // file is "hello", function is "handler"
+    // AWS Lambdaリソースを定義
+    const hello = new NodejsFunction(this, 'HelloHandler', {
+      runtime: Runtime.NODEJS_16_X,
+      entry: 'lambda/hello.ts',
     });
 
-    // defines an API Gateway REST API resource backed by our "hello" function.
-    new apigw.LambdaRestApi(this, 'Endpoint', {
+    // "hello" 関数をバックに持つAPI Gateway REST APIリソースを定義
+    new LambdaRestApi(this, 'Endpoint', {
       handler: hello,
     });
   }

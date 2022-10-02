@@ -34,7 +34,7 @@ weight = 300
 
 `bin/cdk-workshop.ts`を簡単に見てみましょう。
 
-```js
+```ts
 #!/usr/bin/env node
 import * as cdk from 'aws-cdk-lib';
 import { CdkWorkshopStack } from '../lib/cdk-workshop-stack';
