@@ -11,7 +11,7 @@ weight = 500
 これを行うのに役立つ多くのツールがあります。
 このワークショップでは、AWSコンソールからログを見つける方法を紹介します。
 
-1. [AWS Lambdaコンソール](https://console.aws.amazon.com/lambda/home)を開きます
+1. [AWS Lambdaコンソール](https://console.aws.amazon.com/lambda/home#/functions?fo=and&o0=%3A&v0=CdkWorkshopStack-HelloHitCounter)を開きます
    （東京リージョンに接続されていることを確認してください）。
 
 2. **HitCounter** Lambda関数をクリックします（名前には`CdkWorkshopStack-HelloHitCounter`という文字列が含まれています)

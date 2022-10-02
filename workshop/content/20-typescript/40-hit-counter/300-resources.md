@@ -9,37 +9,34 @@ weight = 300
 
 `lib/hitcounter.ts` に戻って、以下のコードを追記しましょう。
 
-{{<highlight ts "hl_lines=3 13-14 19-31">}}
-import * as cdk from 'aws-cdk-lib';
-import * as lambda from 'aws-cdk-lib/aws-lambda';
-import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
+{{<highlight ts "hl_lines=1-3 12-13 17-28">}}
+import { AttributeType, Table } from 'aws-cdk-lib/aws-dynamodb';
+import { IFunction, Runtime } from 'aws-cdk-lib/aws-lambda';
+import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { Construct } from 'constructs';
 
 export interface HitCounterProps {
   /** the function for which we want to count url hits **/
-  downstream: lambda.IFunction;
+  downstream: IFunction;
 }
 
 export class HitCounter extends Construct {
-
   /** allows accessing the counter function */
-  public readonly handler: lambda.Function;
-
+  public readonly handler: IFunction;
   constructor(scope: Construct, id: string, props: HitCounterProps) {
     super(scope, id);
 
-    const table = new dynamodb.Table(this, 'Hits', {
-      partitionKey: { name: 'path', type: dynamodb.AttributeType.STRING }
+    const table = new Table(this, 'Hits', {
+      partitionKey: { name: 'path', type: AttributeType.STRING },
     });
 
-    this.handler = new lambda.Function(this, 'HitCounterHandler', {
-      runtime: lambda.Runtime.NODEJS_16_X,
-      handler: 'hitcounter.handler',
-      code: lambda.Code.fromAsset('lambda'),
+    this.handler = new NodejsFunction(this, 'HitCounterHandler', {
+      runtime: Runtime.NODEJS_16_X,
+      entry: 'lambda/hitcounter.ts',
       environment: {
         DOWNSTREAM_FUNCTION_NAME: props.downstream.functionName,
-        HITS_TABLE_NAME: table.tableName
-      }
+        HITS_TABLE_NAME: table.tableName,
+      },
     });
   }
 }
@@ -48,7 +45,7 @@ export class HitCounter extends Construct {
 ## コードの解説
 
 * DynamoDBテーブルに`path`パーティションキーを定義しました。
-* `lambda/hitcounter.handler`にバインドされるLambda関数を定義しました。
+* `lambda/hitcounter.ts`にバインドされるLambda関数を定義しました。
 * Lambdaの環境変数と`downstream.functionName`、`table.tableName`とを紐付けました。
 
 ## 遅延バインディング値

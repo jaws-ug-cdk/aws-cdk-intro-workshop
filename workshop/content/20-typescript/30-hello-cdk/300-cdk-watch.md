@@ -26,10 +26,10 @@ lambdaのコードを変更するだけならCloudFormationスタックを更新
 
 まず、`cdk deploy`を実行するのにかかる時間を計ってみましょう。
 これは、CloudFormationのフルデプロイにどれくらい時間がかかるかの基準値になります。
-そのために、`lambda/hello.js` 内のコードを変更します。
+そのために、`lambda/hello.ts` 内のコードを変更します。
 
-{{<highlight js "hl_lines=6">}}
-exports.handler = async function(event) {
+{{<highlight ts "hl_lines=6">}}
+export const handler: AWSLambda.APIGatewayProxyHandler = async (event) => {
   console.log("request:", JSON.stringify(event, undefined, 2));
   return {
     statusCode: 200,
@@ -48,7 +48,7 @@ cdk deploy
 出力は次のようになります。
 
 ```
-✨  Synthesis time: 6s
+✨  Synthesis time: 42.35s
 
 CdkWorkshopStack: deploying...
 CdkWorkshopStack: creating CloudFormation changeset...
@@ -57,12 +57,12 @@ CdkWorkshopStack: creating CloudFormation changeset...
 
  ✅  CdkWorkshopStack
 
-✨  Deployment time: 66.82s
+✨  Deployment time: 27.48s
 
 Stack ARN:
 arn:aws:cloudformation:REGION:ACCOUNT-ID:stack/CdkWorkshopStack/STACK-ID
 
-✨  Total time: 72.82s
+✨  Total time: 69.83s
 ```
 
 正確な時間にはばらつきがありますが、通常のデプロイにかかる時間については、かなりの目安になるはずです！
@@ -72,7 +72,7 @@ arn:aws:cloudformation:REGION:ACCOUNT-ID:stack/CdkWorkshopStack/STACK-ID
 {{% notice info %}}
 このコマンドは、デプロイを高速化するために、CloudFormationのスタックに意図的にドリフトを発生させるものです。
 このため、開発目的にのみ使用してください。
-本番デプロイには絶対にhotswapを使わないでください!
+本番デプロイには絶対にhotswapを使わないでください！
 {{% /notice %}}
 
 `CDK deploy --hotswap` を使えばデプロイ時間を短縮することができます。これはCloudFormation のデプロイの代わりにホットスワップデプロイが実行可能かどうかを評価してくれます。
@@ -82,10 +82,10 @@ arn:aws:cloudformation:REGION:ACCOUNT-ID:stack/CdkWorkshopStack/STACK-ID
 
 ## `cdk deploy --hotswap` にかかる時間を測ってみる
 
-`lambda/hello.js`のlambdaコードをもう一度変えてみましょう。
+`lambda/hello.ts`のlambdaコードをもう一度変えてみましょう。
 
-{{<highlight js "hl_lines=6">}}
-exports.handler = async function(event) {
+{{<highlight ts "hl_lines=6">}}
+export const handler: AWSLambda.APIGatewayProxyHandler = async (event) => {
   console.log("request:", JSON.stringify(event, undefined, 2));
   return {
     statusCode: 200,
@@ -104,27 +104,27 @@ cdk deploy --hotswap
 出力は次のようになります。
 
 ```
-✨  Synthesis time: 6.44s
+✨  Synthesis time: 21.51s
 
 ⚠️ The --hotswap flag deliberately introduces CloudFormation drift to speed up deployments
 ⚠️ It should only be used for development - never use it for your production Stacks!
 
 CdkWorkshopStack: deploying...
 ✨ hotswapping resources:
-   ✨ Lambda Function 'CdkWorkshopStack-HelloHandler2E4FBA4D-tEZTcXqG8YYe'
-✨ Lambda Function 'CdkWorkshopStack-HelloHandler2E4FBA4D-tEZTcXqG8YYe' hotswapped!
+   ✨ Lambda Function 'CdkWorkshopStack-HelloHandler2E4FBA4D-Cho6nu1hDGKg'
+✨ Lambda Function 'CdkWorkshopStack-HelloHandler2E4FBA4D-Cho6nu1hDGKg' hotswapped!
 
  ✅  CdkWorkshopStack
 
-✨  Deployment time: 3.07s
+✨  Deployment time: 2.81s
 
 Stack ARN:
 arn:aws:cloudformation:REGION:ACCOUNT-ID:stack/CdkWorkshopStack/STACK-ID
 
-✨  Total time: 9.51s
+✨  Total time: 24.31s
 ```
 
-さきほどのフルデプロイメントには67秒かかりましたが、なんと、ホットスワップデプロイはたったの3秒でデプロイが完了しました！
+さきほどのフルデプロイメントには69秒かかりましたが、ホットスワップデプロイは24秒でデプロイが完了しました！
 しかし、警告メッセージが出ていますね。`--hotswap`フラグの使用上の注意ですのでよく読んでください。
 
 ```
@@ -141,7 +141,7 @@ arn:aws:cloudformation:REGION:ACCOUNT-ID:stack/CdkWorkshopStack/STACK-ID
 実際にコードは変更されたのでしょうか？
 AWS Lambda Consoleで再確認してみましょう!
 
-1. [AWS Lambda Console](https://console.aws.amazon.com/lambda/home#/functions)を開きます。 (正しいリージョンにいることを確認してください)
+1. [AWS Lambda Console](https://console.aws.amazon.com/lambda/home#/functions?fo=and&o0=%3A&v0=CdkWorkshop)を開きます。 (正しいリージョンにいることを確認してください)
 
     デプロイした関数を見つけてください。
 
@@ -163,69 +163,6 @@ AWS Lambda Consoleで再確認してみましょう!
 
 一度設定すれば、`cdk watch`を使用して、ホットスワップ可能な変更とCloudFormationのフルデプロイを必要とする変更の両方を検出することができます。
 
-## `cdk.json` を編集する
-
-`cdk watch` コマンドが実行されると、監視するファイルは `cdk.json` ファイルにある `"watch"` 設定によって決定されます。
-この設定には、 `"include"` と `"exclude"` という2つのサブキーがあり、それぞれ単一の文字列または文字列の配列として使用できます。
-各エントリーは `cdk.json` ファイルの場所からの相対パスとして解釈されます。
-glob、つまり`*` と `**` の両方を使用することができます。
-
-あなたは今、以下のような `cdk.json` ファイルを持っているはずです。
-
-```json
-{
-  "app": "npx ts-node --prefer-ts-exts bin/cdk-workshop.ts",
-  "watch": {
-    "include": [
-      "**"
-    ],
-    "exclude": [
-      "README.md",
-      "cdk*.json",
-      "**/*.d.ts",
-      "**/*.js",
-      "tsconfig.json",
-      "package*.json",
-      "yarn.lock",
-      "node_modules",
-      "test"
-    ]
-  },
-  "context": {
-    // ...
-  }
-}
-```
-
-見ての通り、このサンプルアプリでは `"watch"` 設定が推奨されています。
-実際に `lambda` フォルダにある `.js` ファイルを監視したいので、 `"**/*.js"` を `"exclude"` リストから削除してみましょう。
-
-```json
-{
-  "app": "npx ts-node --prefer-ts-exts bin/cdk-workshop.ts",
-  "watch": {
-    "include": [
-      "**"
-    ],
-    "exclude": [
-      "README.md",
-      "cdk*.json",
-      "**/*.d.ts",
-      "tsconfig.json",
-      "package*.json",
-      "yarn.lock",
-      "node_modules",
-      "test"
-    ]
-  },
-  "context": {
-    // ...
-  }
-}
-```
-
-これで`cdk watch`の準備は万端です!
-
 ## `cdk watch` にかかる時間を測ってみる
 
 まず `cdk watch` を実行してみます。
@@ -239,7 +176,7 @@ cdk watch
 もう一度、`lambda/hello.js` を変更してみましょう。
 
 {{<highlight js "hl_lines=6">}}
-exports.handler = async function(event) {
+export const handler: AWSLambda.APIGatewayProxyHandler = async (event) => {
   console.log("request:", JSON.stringify(event, undefined, 2));
   return {
     statusCode: 200,
@@ -255,26 +192,26 @@ Lambda コードファイルの変更を保存すると、`cdk watch` がファ�
 デプロイはどれくらいの速度で行われたのでしょうか？
 
 ```
-Detected change to 'lambda/hello.js' (type: change). Triggering 'cdk deploy'
+Detected change to 'lambda/hello.ts' (type: change) while 'cdk deploy' is still running. Will queue for another deployment after this one finishes
 
-✨  Synthesis time: 5.57s
+✨  Synthesis time: 18.63s
 
 ⚠️ The --hotswap flag deliberately introduces CloudFormation drift to speed up deployments
 ⚠️ It should only be used for development - never use it for your production Stacks!
 
 CdkWorkshopStack: deploying...
 ✨ hotswapping resources:
-   ✨ Lambda Function 'CdkWorkshopStack-HelloHandler2E4FBA4D-tEZTcXqG8YYe'
-✨ Lambda Function 'CdkWorkshopStack-HelloHandler2E4FBA4D-tEZTcXqG8YYe' hotswapped!
+   ✨ Lambda Function 'CdkWorkshopStack-HelloHandler2E4FBA4D-Cho6nu1hDGKg'
+✨ Lambda Function 'CdkWorkshopStack-HelloHandler2E4FBA4D-Cho6nu1hDGKg' hotswapped!
 
  ✅  CdkWorkshopStack
 
-✨  Deployment time: 2.54s
+✨  Deployment time: 2.93s
 
 Stack ARN:
 arn:aws:cloudformation:REGION:ACCOUNT-ID:stack/CdkWorkshopStack/STACK-ID
 
-✨  Total time: 8.11s
+✨  Total time: 21.56s
 ```
 
 ## まとめ

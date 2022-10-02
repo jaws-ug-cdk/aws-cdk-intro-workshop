@@ -27,7 +27,7 @@ AWS Cloud9(以降、Cloud9）インスタンスを作成します。
 | 項目名      | 値                                         |
 | ----------- | ------------------------------------------ |
 | Name        | `cdk-workshop-playground`                    |
-| Description | cdk-workshopで利用をするCloud9インスタンス |
+| Description | `cdk-workshopで利用をするCloud9インスタンス` |
 
 4. Step2 [Configure settings] では、次のように各項目を入力・選択後、 [Next step] ボタンを押します。
 ネットワークVPC及びサブネットはデフォルトのものを選択してください（デフォルトVPCが存在しない場合、インターネットに接続可能なVPCとサブネットを選択してください）。
