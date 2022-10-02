@@ -141,7 +141,7 @@ cdk deploy
 `cdk deploy` を実行すると、CloudFormationスタックをデプロイするだけでなく、
 初期構築したS3バケットに対して、ローカルの `lambda` ディレクトリを圧縮後、アップロードしていることがが分かるでしょう。
 
-## Testing our function
+## Lambda関数のテスト
 
 AWS Lambdaコンソールに移動して、Lambda関数をテストしましょう。
 
