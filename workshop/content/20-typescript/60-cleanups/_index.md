@@ -11,63 +11,12 @@ chapter = true
 スタックを破棄するとき、リソースはその削除ポリシーに従って「削除」、「保持」、「スナップショット」のいずれかで処理されます。
 デフォルトでは、ほとんどのリソースはスタック削除時に削除されますが、すべてのリソースがそうなるわけではありません。
 DynamoDBのテーブルは、デフォルトで保持されます。このテーブルを保持したくない場合は、CDKのコードで `RemovalPolicy` を使って設定ができます。
+今回はクリーンアップを簡単にするため、DynamoDBのテーブル作成時に`RemovalPolicy.DESTROY`を指定しています。
+そのためスタックを破棄するだけでテーブルもあわせて削除されます。
 
-## スタック削除時に削除するDynamoDBテーブルを設定する
-
-`hitcounter.ts` を編集して、テーブルに `removalPolicy` プロパティを追加します。
-
-{{<highlight ts "hl_lines=26">}}
-import * as cdk from 'aws-cdk-lib';
-import * as lambda from 'aws-cdk-lib/aws-lambda';
-import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
-import { Construct } from 'constructs';
-
-export interface HitCounterProps {
-  /** the function for which we want to count url hits **/
-  downstream: lambda.IFunction;
-}
-
-export class HitCounter extends Construct {
-  /** allows accessing the counter function */
-  public readonly handler: lambda.Function;
-
-  /** the hit counter table */
-  public readonly table: dynamodb.Table;
-
-  constructor(scope: Construct, id: string, props: HitCounterProps) {
-    super(scope, id);
-
-    const table = new dynamodb.Table(this, "Hits", {
-      partitionKey: {
-        name: "path",
-        type: dynamodb.AttributeType.STRING
-      },
-      removalPolicy: cdk.RemovalPolicy.DESTROY
-    });
-    this.table = table;
-
-    this.handler = new lambda.Function(this, 'HitCounterHandler', {
-      runtime: lambda.Runtime.NODEJS_14_X,
-      handler: 'hitcounter.handler',
-      code: lambda.Code.fromAsset('lambda'),
-      environment: {
-        DOWNSTREAM_FUNCTION_NAME: props.downstream.functionName,
-        HITS_TABLE_NAME: table.tableName
-      }
-    });
-
-    // grant the lambda role read/write permissions to our table
-    table.grantReadWriteData(this.handler);
-
-    // grant the lambda role invoke permissions to the downstream function
-    props.downstream.grantInvoke(this.handler);
-  }
-}
-{{</highlight>}}
-
-さらに、作成されたLambda関数は、永久に保持されるCloudWatchのログを生成します。
-これらはスタックの一部ではないので、CloudFormationでは追跡されず、ログは削除されずに残ります。
-CloudWatchのログを削除する場合は、コンソールでこれらを手動で削除する必要があります。
+また、作成されたLambda関数は、永久に保持されるCloudWatchのログを生成します。
+これらは**スタックの一部ではないので、CloudFormationでは追跡されず、ログは削除されずに残ります**。
+**CloudWatchのログを削除する場合は、コンソールでこれらを手動で削除する必要**があります。
 
 どのリソースが削除されるかがわかったので、スタックの削除を進めましょう。
 CloudFormationのコンソールからスタックを削除するか、`cdk destroy`を使用するかのどちらかです。
