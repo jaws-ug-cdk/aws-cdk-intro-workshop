@@ -20,6 +20,8 @@ parent"><a href=/aws-cdk-intro-workshop/20-typescript/40-hit-counter.html>コン
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex;background-color:#3c3d38><span>    <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>table</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> <span style=color:#a6e22e>Table</span>(<span style=color:#66d9ef>this</span>, <span style=color:#e6db74>&#39;Hits&#39;</span>, {
 </span></span><span style=display:flex;background-color:#3c3d38><span>      <span style=color:#a6e22e>partitionKey</span><span style=color:#f92672>:</span> { <span style=color:#a6e22e>name</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;path&#39;</span>, <span style=color:#66d9ef>type</span><span style=color:#f92672>:</span> <span style=color:#a6e22e>AttributeType</span>.<span style=color:#a6e22e>STRING</span> },
+</span></span><span style=display:flex;background-color:#3c3d38><span>      <span style=color:#75715e>// Note: プロダクションではDBテーブルは保持することが多いが今回はハンズオンのためDESTROYを指定
+</span></span></span><span style=display:flex;background-color:#3c3d38><span><span style=color:#75715e></span>      <span style=color:#a6e22e>removalPolicy</span>: <span style=color:#66d9ef>cdk.RemovalPolicy.DESTROY</span>,
 </span></span><span style=display:flex;background-color:#3c3d38><span>    });
 </span></span><span style=display:flex;background-color:#3c3d38><span>
 </span></span><span style=display:flex;background-color:#3c3d38><span>    <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>handler</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> <span style=color:#a6e22e>NodejsFunction</span>(<span style=color:#66d9ef>this</span>, <span style=color:#e6db74>&#39;HitCounterHandler&#39;</span>, {
@@ -28,8 +30,8 @@ parent"><a href=/aws-cdk-intro-workshop/20-typescript/40-hit-counter.html>コン
 </span></span><span style=display:flex;background-color:#3c3d38><span>      <span style=color:#a6e22e>environment</span><span style=color:#f92672>:</span> {
 </span></span><span style=display:flex;background-color:#3c3d38><span>        <span style=color:#a6e22e>DOWNSTREAM_FUNCTION_NAME</span>: <span style=color:#66d9ef>props.downstream.functionName</span>,
 </span></span><span style=display:flex;background-color:#3c3d38><span>        <span style=color:#a6e22e>HITS_TABLE_NAME</span>: <span style=color:#66d9ef>table.tableName</span>,
-</span></span><span style=display:flex;background-color:#3c3d38><span>      },
-</span></span><span style=display:flex;background-color:#3c3d38><span>    });
+</span></span><span style=display:flex><span>      },
+</span></span><span style=display:flex><span>    });
 </span></span><span style=display:flex><span>  }
 </span></span><span style=display:flex><span>}</span></span></code></pre></div><h2 id=コードの解説>コードの解説</h2><ul><li>DynamoDBテーブルに<code>path</code>パーティションキーを定義しました。</li><li><code>lambda/hitcounter.ts</code>にバインドされるLambda関数を定義しました。</li><li>Lambdaの環境変数と<code>downstream.functionName</code>、<code>table.tableName</code>とを紐付けました。</li></ul><h2 id=遅延バインディング値>遅延バインディング値</h2><p><code>functionName</code>と<code>tableName</code>プロパティは、CloudFormationスタックをデプロイするタイミングで解決される値です
 （テーブル/関数を定義した時点では、まだ物理名が決まっていないことに注目してください。論理IDだけが決まっています。）。

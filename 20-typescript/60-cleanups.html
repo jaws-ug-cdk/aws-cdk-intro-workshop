@@ -3,54 +3,11 @@ parent"><a href=/aws-cdk-intro-workshop/20-typescript.html>TypeScript ワーク�
 active"><a href=/aws-cdk-intro-workshop/20-typescript/60-cleanups.html>Clean up</a></li></ul></li></ul><section id=shortcuts><h3></h3><ul><li><a class=padding href=https://github.com/awslabs/aws-cdk><i class='fab fa-github fa-lg'></i> aws/aws-cdk</a></li><li><a class=padding href=https://stackoverflow.com/questions/tagged/aws-cdk><i class='fab fa-stack-overflow fa-lg'></i> stack-overflow</a></li><li><a class=padding href=https://gitter.im/awslabs/aws-cdk><i class='fab fa-gitter fa-lg'></i> gitter</a></li><li><a class=padding href=https://github.com/jaws-ug-cdk/aws-cdk-intro-workshop><i class='fab fa-github fa-lg'></i> workshop (issues/PRs)</a></li><li><a class=padding href="https://twitter.com/intent/user?screen_name=jawsug_cdk"><i class='fab fa-twitter fa-lg'></i> @jawsug_cdk</a></li></ul></section><section id=footer><left><a href="https://aws.amazon.com/privacy/?nc1=f_pr">Privacy</a> | <a href="https://aws.amazon.com/terms/?nc1=f_pr">Site Terms</a> | © 2020-2022, Amazon Web Services, Inc. or its affiliates. All rights reserved.</left></section></div></nav><section id=body><div id=overlay></div><div class="padding highlightable"><div><div id=top-bar><div id=breadcrumbs itemscope itemtype=http://data-vocabulary.org/Breadcrumb><span id=sidebar-toggle-span><a href=# id=sidebar-toggle data-sidebar-toggle><i class="fas fa-bars"></i></a></span>
 <span class=links><a href=/aws-cdk-intro-workshop/>AWS CDK Intro Workshop</a> > <a href=/aws-cdk-intro-workshop/20-typescript.html>TypeScript ワークショップ</a> > Clean up</span></div></div></div><div id=chapter><div id=body-inner><h1 id=リソースのクリーンアップ>リソースのクリーンアップ</h1><h2 id=スタックのクリーンアップ>スタックのクリーンアップ</h2><p>スタックを破棄するとき、リソースはその削除ポリシーに従って「削除」、「保持」、「スナップショット」のいずれかで処理されます。
 デフォルトでは、ほとんどのリソースはスタック削除時に削除されますが、すべてのリソースがそうなるわけではありません。
-DynamoDBのテーブルは、デフォルトで保持されます。このテーブルを保持したくない場合は、CDKのコードで <code>RemovalPolicy</code> を使って設定ができます。</p><h2 id=スタック削除時に削除するdynamodbテーブルを設定する>スタック削除時に削除するDynamoDBテーブルを設定する</h2><p><code>hitcounter.ts</code> を編集して、テーブルに <code>removalPolicy</code> プロパティを追加します。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;display:grid><code class=language-ts data-lang=ts><span style=display:flex><span><span style=color:#66d9ef>import</span> <span style=color:#f92672>*</span> <span style=color:#66d9ef>as</span> <span style=color:#a6e22e>cdk</span> <span style=color:#66d9ef>from</span> <span style=color:#e6db74>&#39;aws-cdk-lib&#39;</span>;
-</span></span><span style=display:flex><span><span style=color:#66d9ef>import</span> <span style=color:#f92672>*</span> <span style=color:#66d9ef>as</span> <span style=color:#a6e22e>lambda</span> <span style=color:#66d9ef>from</span> <span style=color:#e6db74>&#39;aws-cdk-lib/aws-lambda&#39;</span>;
-</span></span><span style=display:flex><span><span style=color:#66d9ef>import</span> <span style=color:#f92672>*</span> <span style=color:#66d9ef>as</span> <span style=color:#a6e22e>dynamodb</span> <span style=color:#66d9ef>from</span> <span style=color:#e6db74>&#39;aws-cdk-lib/aws-dynamodb&#39;</span>;
-</span></span><span style=display:flex><span><span style=color:#66d9ef>import</span> { <span style=color:#a6e22e>Construct</span> } <span style=color:#66d9ef>from</span> <span style=color:#e6db74>&#39;constructs&#39;</span>;
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>export</span> <span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>HitCounterProps</span> {
-</span></span><span style=display:flex><span>  <span style=color:#75715e>/** the function for which we want to count url hits **/</span>
-</span></span><span style=display:flex><span>  <span style=color:#a6e22e>downstream</span>: <span style=color:#66d9ef>lambda.IFunction</span>;
-</span></span><span style=display:flex><span>}
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>export</span> <span style=color:#66d9ef>class</span> <span style=color:#a6e22e>HitCounter</span> <span style=color:#66d9ef>extends</span> <span style=color:#a6e22e>Construct</span> {
-</span></span><span style=display:flex><span>  <span style=color:#75715e>/** allows accessing the counter function */</span>
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>readonly</span> <span style=color:#a6e22e>handler</span>: <span style=color:#66d9ef>lambda.Function</span>;
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>  <span style=color:#75715e>/** the hit counter table */</span>
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>readonly</span> <span style=color:#a6e22e>table</span>: <span style=color:#66d9ef>dynamodb.Table</span>;
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>constructor</span>(<span style=color:#a6e22e>scope</span>: <span style=color:#66d9ef>Construct</span>, <span style=color:#a6e22e>id</span>: <span style=color:#66d9ef>string</span>, <span style=color:#a6e22e>props</span>: <span style=color:#66d9ef>HitCounterProps</span>) {
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>super</span>(<span style=color:#a6e22e>scope</span>, <span style=color:#a6e22e>id</span>);
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>table</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> <span style=color:#a6e22e>dynamodb</span>.<span style=color:#a6e22e>Table</span>(<span style=color:#66d9ef>this</span>, <span style=color:#e6db74>&#34;Hits&#34;</span>, {
-</span></span><span style=display:flex><span>      <span style=color:#a6e22e>partitionKey</span><span style=color:#f92672>:</span> {
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>name</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;path&#34;</span>,
-</span></span><span style=display:flex><span>        <span style=color:#66d9ef>type</span><span style=color:#f92672>:</span> <span style=color:#a6e22e>dynamodb</span>.<span style=color:#a6e22e>AttributeType</span>.<span style=color:#a6e22e>STRING</span>
-</span></span><span style=display:flex><span>      },
-</span></span><span style=display:flex;background-color:#3c3d38><span>      <span style=color:#a6e22e>removalPolicy</span>: <span style=color:#66d9ef>cdk.RemovalPolicy.DESTROY</span>
-</span></span><span style=display:flex><span>    });
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>table</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>table</span>;
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>handler</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>new</span> <span style=color:#a6e22e>lambda</span>.Function(<span style=color:#66d9ef>this</span>, <span style=color:#e6db74>&#39;HitCounterHandler&#39;</span>, {
-</span></span><span style=display:flex><span>      <span style=color:#a6e22e>runtime</span>: <span style=color:#66d9ef>lambda.Runtime.NODEJS_14_X</span>,
-</span></span><span style=display:flex><span>      <span style=color:#a6e22e>handler</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;hitcounter.handler&#39;</span>,
-</span></span><span style=display:flex><span>      <span style=color:#a6e22e>code</span>: <span style=color:#66d9ef>lambda.Code.fromAsset</span>(<span style=color:#e6db74>&#39;lambda&#39;</span>),
-</span></span><span style=display:flex><span>      <span style=color:#a6e22e>environment</span><span style=color:#f92672>:</span> {
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>DOWNSTREAM_FUNCTION_NAME</span>: <span style=color:#66d9ef>props.downstream.functionName</span>,
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>HITS_TABLE_NAME</span>: <span style=color:#66d9ef>table.tableName</span>
-</span></span><span style=display:flex><span>      }
-</span></span><span style=display:flex><span>    });
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#75715e>// grant the lambda role read/write permissions to our table
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#a6e22e>table</span>.<span style=color:#a6e22e>grantReadWriteData</span>(<span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>handler</span>);
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#75715e>// grant the lambda role invoke permissions to the downstream function
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#a6e22e>props</span>.<span style=color:#a6e22e>downstream</span>.<span style=color:#a6e22e>grantInvoke</span>(<span style=color:#66d9ef>this</span>.<span style=color:#a6e22e>handler</span>);
-</span></span><span style=display:flex><span>  }
-</span></span><span style=display:flex><span>}</span></span></code></pre></div><p>さらに、作成されたLambda関数は、永久に保持されるCloudWatchのログを生成します。
-これらはスタックの一部ではないので、CloudFormationでは追跡されず、ログは削除されずに残ります。
-CloudWatchのログを削除する場合は、コンソールでこれらを手動で削除する必要があります。</p><p>どのリソースが削除されるかがわかったので、スタックの削除を進めましょう。
+DynamoDBのテーブルは、デフォルトで保持されます。このテーブルを保持したくない場合は、CDKのコードで <code>RemovalPolicy</code> を使って設定ができます。
+今回はクリーンアップを簡単にするため、DynamoDBのテーブル作成時に<code>RemovalPolicy.DESTROY</code>を指定しています。
+そのためスタックを破棄するだけでテーブルもあわせて削除されます。</p><p>また、作成されたLambda関数は、永久に保持されるCloudWatchのログを生成します。
+これらは<strong>スタックの一部ではないので、CloudFormationでは追跡されず、ログは削除されずに残ります</strong>。
+<strong>CloudWatchのログを削除する場合は、コンソールでこれらを手動で削除する必要</strong>があります。</p><p>どのリソースが削除されるかがわかったので、スタックの削除を進めましょう。
 CloudFormationのコンソールからスタックを削除するか、<code>cdk destroy</code>を使用するかのどちらかです。</p><pre tabindex=0><code>cdk destroy
 </code></pre><p>以下のように聞かれるはずです。</p><pre tabindex=0><code>Are you sure you want to delete: CdkWorkshopStack (y/n)?
 </code></pre><p><code>y</code>を押すと、スタックが削除されていく進捗が表示されます。</p><p><code>cdk bootstrap</code> によって作成されたブートストラップスタックは削除されません。
