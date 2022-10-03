@@ -40,6 +40,11 @@ export class HitCounter extends Construct {
         HITS_TABLE_NAME: table.tableName,
       },
     });
+
+    // Lambda関数に対してテーブルを読み書き/別のLambdaを実行する権限を付与
+    // CDKでは「grant」を利用してリソースに権限を付与できる
+    table.grantReadWriteData(this.handler);
+    props.downstream.grantInvoke(this.handler);
   }
 }
 {{</highlight>}}

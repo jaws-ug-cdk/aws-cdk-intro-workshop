@@ -15,6 +15,9 @@ curl https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod/hello/world
 curl https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod/hello/world
 ```
 
+> もし、5XXエラーとなる場合は、Lambdaのコンソール画面からHitCounterのログを確認してみてください。
+> 問題点がある場合は問い合わせをお願いします。
+
 ## DynamoDBコンソールを開く
 
 1. [DynamoDBコンソール](https://console.aws.amazon.com/dynamodb/home)に移動します。
@@ -30,7 +33,7 @@ curl https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod/hello/world
 
 ## Good job!
 
-`HitCounter`は大変便利だということがご理解いただけたと思います。
+`HitCounter`は便利だということがご理解いただけたと思います。
 基本的に、誰でもAPI Gatewayのプロキシバックエンドとして機能するLambda関数にアタッチでき、このAPIのカウントを記録できます。
 
 HitCounterはTypeScriptクラスであるため、npmモジュールをパッケージ化して、
