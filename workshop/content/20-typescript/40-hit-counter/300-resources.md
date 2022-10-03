@@ -28,6 +28,8 @@ export class HitCounter extends Construct {
 
     const table = new Table(this, 'Hits', {
       partitionKey: { name: 'path', type: AttributeType.STRING },
+      // Note: プロダクションではDBテーブルは保持することが多いが今回はハンズオンのためDESTROYを指定
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
     this.handler = new NodejsFunction(this, 'HitCounterHandler', {
