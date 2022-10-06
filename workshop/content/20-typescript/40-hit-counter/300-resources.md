@@ -9,7 +9,7 @@ weight = 300
 
 `lib/hitcounter.ts` に戻って、以下のコードを追記しましょう。
 
-{{<highlight ts "hl_lines=1-3 12-13 17-28">}}
+{{<highlight ts "hl_lines=1-3 12-13 17-35">}}
 import { AttributeType, Table } from 'aws-cdk-lib/aws-dynamodb';
 import { IFunction, Runtime } from 'aws-cdk-lib/aws-lambda';
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
