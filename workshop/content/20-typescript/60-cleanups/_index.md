@@ -45,8 +45,8 @@ CloudFormationコンソールから`CDKToolkit`スタックを削除してくだ
 
 CDK の実行環境として使用した Cloud 9 を削除します。AWS マネージメントコンソールから Cloud 9 を開いて、「Delete」ボタンを押します。
 
-![cloud9-delete-button](./cloud9-delete-1.png)
+![cloud9-delete-button](./60-cleanups/cloud9-delete-1.png)
 
 確認画面で「Delete」と入力すると削除できます。
 
-![cloud9-delete-confirmation-screen](./cloud9-delete-2.png)
+![cloud9-delete-confirmation-screen](./60-cleanups/cloud9-delete-2.png)
