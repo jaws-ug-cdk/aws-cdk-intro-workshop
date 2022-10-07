@@ -3,13 +3,13 @@ title = "API Gateway"
 weight = 400
 +++
 
-次のステップでは、API Gatewayを関数の前に追加していきます。
+次のステップでは、Amazon API Gateway（以降、API Gateway）を関数の前に追加していきます。
 API GatewayはパブリックHTTPエンドポイントを公開します。このエンドポイントは、インターネット上の誰もが
 [curl](https://curl.haxx.se/)やウェブブラウザのようなHTTPクライアントでヒットできます。
 
 API Gatewayのルートには、
 [Lambda proxy integration](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-create-api-as-simple-proxy-for-lambda.html)を利用します。
-つまり、どのURLパスへのリクエストも、直接Lambda関数にプロキシされ、関数からのレスポンスがユーザーに返されることになります。
+これは、どのURLパスへのリクエストも、直接Lambda関数にプロキシされ、関数からのレスポンスがユーザーに返される動作となります。
 
 ## LambdaRestApi コンストラクトを追加する
 

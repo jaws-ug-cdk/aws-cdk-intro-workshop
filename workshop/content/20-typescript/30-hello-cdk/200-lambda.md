@@ -23,7 +23,7 @@ export const handler: AWSLambda.APIGatewayProxyHandler = async (event) => {
 };
 ```
 
-これは、**「Hello, CDK! You’ve hit [url path]」**というテキストを返す単純なLambda関数です。
+これは、「Hello, CDK! You’ve hit [url path]」というテキストを返す単純なLambda関数です。
 HTTPステータスコードとHTTPヘッダーが付加されたHTTPレスポンスとしてユーザーに応答するために、API Gatewayを使用します。
 
 {{% notice info %}}
@@ -73,6 +73,7 @@ export class CdkWorkshopStack extends Stack {
 
 ご覧のとおり、`CdkWorkshopStack`と`NodejsFunction`の両方のコンストラクタークラス（およびCDKの他の多くのクラス）は`(scope, id, props)`という同じような引数を受け取ります。
 これは、これらのクラスがすべて**コンストラクタ**であるためです。
+
 コンストラクトはCDKアプリの基本的な構成要素です。
 それらは「クラウドコンポーネント」を表現します。クラウドコンポーネントはスコープを介してより高いレベルの抽象化に構築できます。
 スコープにはコンストラクトを含めることができ、そのコンストラクトには他のコンストラクトなどを含めることができます。
