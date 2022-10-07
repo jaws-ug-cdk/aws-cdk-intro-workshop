@@ -57,8 +57,9 @@ IAM Statement Changes
 Do you wish to deploy these changes (y/n)? 
 ```
 
-これは、アプリのデプロイにはリスクが伴うことを警告しています。
-トピックがメッセージをキューに送信できるようにする必要があるため、**y**を入力してスタックをデプロイし、リソースを作成します。
+これは、アプリのデプロイにはリスクが伴うことを警告しています（具体的には、IAMに変更が入る場合などです）。
+今回は、SNSトピックがメッセージをSQSキューに送信できるIAM権限が必要になるためです。
+**y**を入力してスタックをデプロイし、リソースを作成します。
 
 出力は次のようになります。
 ACCOUNT-IDはアカウントID、REGIONはアプリを作成したリージョン、STACK-IDはスタックを一意に特定する識別子です。
@@ -79,14 +80,14 @@ arn:aws:cloudformation:REGION:ACCOUNT-ID:stack/CdkWorkshopStack/STACK-ID
 
 ## CloudFormationコンソール
 
-CDKアプリはAWS CloudFormationを介してデプロイされます。
-各CDKスタックはCloudFormationスタックと1：1に対応します。
+CDKアプリケーションはAWS CloudFormationを介してデプロイされます。
+**各CDKスタックはCloudFormationスタックと1：1に対応**します。
 
-なので、AWS CloudFormationコンソールでスタックを管理することができます。
+そのため、AWS CloudFormationコンソールでスタックを管理できます。
 
 [AWS CloudFormationコンソール](https://console.aws.amazon.com/cloudformation/home)を見てみましょう。
 
-次のようなものが表示されるはずです。（表示されない場合、正しいリージョンにいるか確認してください。）
+次のようなものが表示されるはずです（表示されない場合、正しいリージョンにいるか確認してください）。
 
 ![](./cfn1.png)
 

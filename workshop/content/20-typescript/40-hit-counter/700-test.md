@@ -43,3 +43,4 @@ JavaScriptパッケージマネージャーである[npmjs.org](http://npmjs.org
 -----
 
 現時点で用意しているハンズオンはコンテンツは以上です。おつかれさまでした。
+[cleanup section]({{< ref "/20-typescript/60-cleanups" >}})を参考に、リソースの削除を忘れないようにしましょう。

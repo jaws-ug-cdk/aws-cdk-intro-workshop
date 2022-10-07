@@ -8,35 +8,35 @@ weight: 1
 
 AWS Cloud Development Kit (AWS CDK) ワークショップへようこそ！
 
-AWS CDKはAWSの新しいソフトウェア開発フレームワークで、
-好きなプログラミング言語で楽しく簡単にクラウドインフラを定義し、
-AWS CloudFormationを使ってデプロイできるようにすることを唯一の目的にしています。
+AWS CDKはAWSの新しいソフトウェア開発フレームワークです。
+好きなプログラミング言語で楽しく簡単にクラウドインフラストラクチャを定義し、AWS CloudFormationを使ってデプロイできるようにすることを唯一の目的にしています。
 
-このワークショップでは開発環境のセットアップから始まり、
-CDK Toolkit を使って AWS 環境にアプリをデプロイする方法について学びます。
+このワークショップでは開発環境のセットアップから始まり、CDK Toolkitを使ってAWS環境にアプリケーションをデプロイする方法について学びます。
+小さなAWS Lambdaの関数を書き、Amazon API Gatewayのエンドポイントをフロントに置くことで、ユーザーが HTTPリクエストを用いてそれを呼び出せるようにします。
 
-次に、小さな "Hello, world" Lambda 関数を書き、
-そしてAPI Gateway のエンドポイントをフロントに置くことで、ユーザーが HTTP を用いてそれを呼び出すことができるようにします。
-
-次に、CDK constructsという強力な概念を紹介します。
+次に、**CDK constructsという強力な概念を紹介**します。
 コンストラクトを使用すると、多くのインフラストラクチャを再利用可能なコンポーネントにまとめ、誰でも自分のアプリケーションに組み入れることができます。
-独自のコンストラストを作成する方法を説明します。
 
-最後に、あなたのスタックにあらかじめパッケージされたライブラリからコンストラストを使用する方法を紹介します。
+最後に、独自のコンストラクトを作成する方法を説明します。
 
 このワークショップの終了時には、次のことができるようになります。
 
 - 新しい CDK アプリケーションを作成する
-- AWS Construct Library を使用して、アプリのインフラストラクチャを定義する
-- AWSアカウントへのCDKアプリをデプロイする
-- 再利用可能な独自のコンストラクタを定義する
+- AWS Construct Library を使用して、アプリケーションのインフラストラクチャを定義する
+- AWSアカウントへのCDKアプリケーションをデプロイする
+- 再利用可能な独自のコンストラクトを定義する
 
-また、本ワークショップの最後には、弊社の[Construct Hub](./60-construct-hub.html) を活用するための簡単なガイドが掲載されています。
-これは、今後 CDK を使用する際に便利なツールです。
+{{% notice info %}}
+
+**免責事項**: 本資料は、AWSが提供する[CDK Workshop](https://cdkworkshop.com/)を元にJAWS-UG CDK支部のメンバーで作成しています。
+記載誤りがある場合は、[Twitterスペース](https://twitter.com/i/communities/1539905872230420481)、または[GitHub](https://github.com/jaws-ug-cdk/aws-cdk-intro-workshop/issues)にてお知らせください。
+
+{{% /notice %}}
 
 ## See Also
 
 - [AWS CDK User Guide](https://docs.aws.amazon.com/CDK/latest/userguide)
 - [AWS CDK Reference](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-construct-library.html)
+- [Construct Hub](https://constructs.dev/)
 
 ![](images/cdk-logo.png)
