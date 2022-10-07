@@ -15,4 +15,4 @@ DynamoDBコンソールを開く DynamoDBコンソールに移動します。
 新しいパスでAPIを叩き、アイテムビューを更新してください。 hitsカウントが1の新しいアイテムが表示されます。
 Good job! HitCounterは便利だということがご理解いただけたと思います。 基本的に、誰でもAPI Gatewayのプロキシバックエンドとして機能するLambda関数にアタッチでき、このAPIのカウントを記録できます。
 HitCounterはTypeScriptクラスであるため、npmモジュールをパッケージ化して、 JavaScriptパッケージマネージャーであるnpmjs.orgに公開できます。 公開後は誰でもnpm install でインストールでき、CDKアプリに追加できます。
-現時点で用意しているハンズオンはコンテンツは以上です。おつかれさまでした。</description></item></channel></rss>
+現時点で用意しているハンズオンはコンテンツは以上です。おつかれさまでした。 cleanup sectionを参考に、リソースの削除を忘れないようにしましょう。</description></item></channel></rss>
