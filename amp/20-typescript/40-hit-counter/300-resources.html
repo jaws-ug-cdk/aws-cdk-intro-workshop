@@ -6,6 +6,7 @@ parent"><a href=/aws-cdk-intro-workshop/20-typescript/40-hit-counter.html>コン
 </span></span><span style=display:flex;background-color:#3c3d38><span><span style=color:#66d9ef>import</span> { <span style=color:#a6e22e>IFunction</span>, <span style=color:#a6e22e>Runtime</span> } <span style=color:#66d9ef>from</span> <span style=color:#e6db74>&#39;aws-cdk-lib/aws-lambda&#39;</span>;
 </span></span><span style=display:flex;background-color:#3c3d38><span><span style=color:#66d9ef>import</span> { <span style=color:#a6e22e>NodejsFunction</span> } <span style=color:#66d9ef>from</span> <span style=color:#e6db74>&#39;aws-cdk-lib/aws-lambda-nodejs&#39;</span>;
 </span></span><span style=display:flex><span><span style=color:#66d9ef>import</span> { <span style=color:#a6e22e>Construct</span> } <span style=color:#66d9ef>from</span> <span style=color:#e6db74>&#39;constructs&#39;</span>;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>import</span> { <span style=color:#a6e22e>RemovalPolicy</span> } <span style=color:#66d9ef>from</span> <span style=color:#e6db74>&#39;aws-cdk-lib&#39;</span>
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span><span style=color:#66d9ef>export</span> <span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>HitCounterProps</span> {
 </span></span><span style=display:flex><span>  <span style=color:#75715e>/** the function for which we want to count url hits **/</span>
