@@ -44,7 +44,7 @@ IDEがオートコンプリート、インラインドキュメント、およ�
 
 `import`ステートメントを`lib/cdk-workshop-stack.ts`の冒頭に挿入し、`lambda.Function`をスタックに追加します。
 
-{{<highlight ts "hl_lines=3 9-14">}}
+{{<highlight ts "hl_lines=2-3 9-14">}}
 import { Stack, StackProps } from 'aws-cdk-lib';
 import { Runtime } from 'aws-cdk-lib/aws-lambda';
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
