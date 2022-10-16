@@ -9,12 +9,12 @@ weight = 300
 
 `lib/hitcounter.ts` に戻って、以下のコードを追記しましょう。
 
-{{<highlight ts "hl_lines=1-3 13-14 18-36">}}
+{{<highlight ts "hl_lines=1-4 13-14 18-36">}}
 import { AttributeType, Table } from 'aws-cdk-lib/aws-dynamodb';
 import { IFunction, Runtime } from 'aws-cdk-lib/aws-lambda';
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
+import { RemovalPolicy } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { RemovalPolicy } from 'aws-cdk-lib'
 
 export interface HitCounterProps {
   /** the function for which we want to count url hits **/
